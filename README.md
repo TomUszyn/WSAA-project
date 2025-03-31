@@ -59,7 +59,7 @@ A Music Playlist Organiser is a web app that enables users to create, manage, an
 
 ---
 
-### ![](img/database-storage32x32.pn)g Database Schema Example
+### ![](img/database-storage32x32.png) Database Schema Example
 
 To allow the same track to appear multiple times in a single playlist or across multiple playlists, the database schema separates track metadata from playlist entries. This is achieved through a **many-to-many relationship** between playlists and tracks.
 
