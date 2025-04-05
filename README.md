@@ -21,95 +21,91 @@ The Music Playlist Organiser will be developed to demonstrate the techniques and
 
 
 ## Project Description 
-A Music Playlist Organiser is a web app that enables users to create, manage, and explore their personal playlists. The project involves CRUD operations, a database for storing playlists, and an intuitive web interface for user interaction. Advanced features, such as Last.fm API integration will further enhance the user experience.
+A Music Playlist Organizer is a web app that enables a single operator to create and manage playlists efficiently. The project includes CRUD operations for playlists and tracks, along with an intuitive web interface for easy interaction. The integration of the Last.fm API enhances the experience by automatically fetching song details.
 
 ---
 
 ### 📌 Features Breakdown
 
-#### 1. Minimum Features (Core Functionality)
+### 1. Core Features
 
-- **✔ CRUD Operations for Playlists:**
-    - Users can Create, Read, Update, and Delete playlists.
-    - Each playlist includes a title, songs, artist names, and genres.
-    - Songs can be added to or removed from a playlist.
+- **✔ CRUD Operations for Playlists and Tracks:**
+  - The operator can Create, Read, Update, and Delete playlists.
+  - Each playlist contains multiple tracks.
+  - Tracks can be added to or removed from playlists.
   
 - **✔ Database Structure:**
-    - A table for playlists storing metadata (title, creation date, etc.).
-    - A table for songs storing song details (name, artist, genre, playlist_id).
+  - A table for playlists storing metadata (title, creation date, etc.).
+  - A table for tracks storing unique song details (title, artist, genre).
+  - A join table to allow tracks to be added multiple times to the same or different playlists.
   
 - **✔ Web Interface (AJAX & Flask):**
-    - A clean and interactive UI for adding and managing playlists.
-    - AJAX calls to perform CRUD operations dynamically.
+  - A clean and interactive UI for managing playlists and tracks.
+  - AJAX calls enable dynamic updates without reloading the page.
 
 ---
 
-#### 2. Advanced Features (For Higher Marks)
+#### 2. Advanced Features 
 
 - **🟢 Last.fm API Integration:**
-    - Fetch song details (artist, album, duration, release date) automatically.
+    - Fetch song details automatically.
 
 - **🟢 Visualisation & Statistics:**
-    - Graphs showing top genres, most played artists, and listening trends.
-    - Pie charts or bar graphs to display playlist composition.
+  - Graphs displaying top genres, most frequently added artists, and playlist trends.
+  - Pie charts or bar graphs to visualize playlist composition.
 
 - **🟢 Hosting on PythonAnywhere:**
-    - Deploy the app online for accessibility and grading purposes.
-    - Use MySQL for database management.
+  - Deployment online for accessibility and evaluation.
+  - MySQL for database management.
 
 ---
 
 ### ![](img/database-storage32x32.png) Database Schema Example
 
-To allow the same track to appear multiple times in a single playlist or across multiple playlists, the database schema separates track metadata from playlist entries. This is achieved through a **many-to-many relationship** between playlists and tracks.
+### 1. Playlists Table
+Stores playlist details.
 
-### 1. Users Table
-This table is used to separate data for different users, even without authentication.
+| id  | name         | created_at          |
+|-----|-------------|---------------------|
+| 1   | Chill Vibes | 2025-03-25 10:00:00 |
+| 2   | Workout Mix | 2025-03-26 11:00:00 |
 
-| id  | username   | email          |
-| --- | ---------- | -------------- |
-| 1   | user1      | user1@email.com|
-| 2   | user2      | user2@email.com|
+### 2. Tracks Table
+Stores unique track details.
 
-### 2. Playlists Table
-This table stores playlists for users.
+| id  | title             | artist       | genre    |
+|-----|------------------|-------------|---------|
+| 1   | Blinding Lights | The Weeknd  | Pop     |
+| 2   | Lose Yourself   | Eminem      | Hip-Hop |
+| 3   | Eye of the Tiger | Survivor   | Rock    |
 
-| id  | name          | user_id | created_at          |
-| --- | ------------- | ------- | ------------------- |
-| 1   | Chill Vibes   | 1       | 2025-03-25 10:00:00 |
-| 2   | Workout Mix   | 2       | 2025-03-26 11:00:00 |
-
-### 3. Track Metadata Table
-This table stores unique track details, with one entry for each track.
-
-| id  | title           | artist       | genre    |
-| --- | --------------- | ------------ | -------- |
-| 1   | Blinding Lights | The Weeknd   | Pop      |
-| 2   | Lose Yourself   | Eminem       | Hip-Hop  |
-
-### 4. Playlist Tracks Table (Join Table for Many-to-Many Relationship)
-This table allows a track to appear in multiple playlists.
+### 3. Playlist Tracks Table (Join Table)
+Allows tracks to be added multiple times to the same or different playlists.
 
 | id  | playlist_id | track_id | added_at          |
-| --- | ----------- | -------- | ----------------- |
-| 1   | 1           | 1        | 2025-03-26 10:00  |
-| 2   | 1           | 1        | 2025-03-26 10:05  |
-| 3   | 2           | 1        | 2025-03-27 12:30  |
-| 4   | 1           | 2        | 2025-03-28 15:20  |
-| 5   | 2           | 2        | 2025-03-28 16:40  |
+|-----|------------|---------|------------------|
+| 1   | 1          | 1       | 2025-03-26 10:00 |
+| 2   | 1          | 1       | 2025-03-26 10:05 |
+| 3   | 2          | 1       | 2025-03-27 12:30 |
+| 4   | 1          | 2       | 2025-03-28 15:20 |
+| 5   | 2          | 2       | 2025-03-28 16:40 |
 
 ## How This Works
-- The `track_metadata` table stores unique tracks.
-- The `playlist_tracks` table records which tracks are in which playlists.
+- The `tracks` table stores unique song details.
+- The `playlist_tracks` table records which tracks belong to which playlists.
 - The same track can appear:
-  1. Multiple times in the same playlist (each entry in `playlist_tracks` is unique).
-  2. In multiple different playlists.
+  - Multiple times in the same playlist (each entry in `playlist_tracks` is unique).
+  - In multiple different playlists.
+- The Flask API enables seamless communication between the frontend and the database.
 
-### Benefits of This Approach
-✅ The same track can be added multiple times to the same playlist.
-✅ The same track can exist in multiple playlists.
-✅ Efficient storage since track details (title, artist, genre, play count, listeners) are stored once.
-✅ Easy to extend (e.g., add play count, listeners, etc.).
+## Benefits of This Approach
+✅ Allows the same track to be added multiple times to the same playlist.  
+✅ Enables tracks to exist in multiple playlists efficiently.  
+✅ Reduces data duplication by storing unique track details separately.  
+✅ Improves performance and query optimization.  
+✅ Enhances flexibility for future extensions, such as play counts and user interactions.  
+✅ Provides a structured and maintainable API for frontend integration.
+
 
 ---
 
@@ -124,7 +120,9 @@ This table allows a track to appear in multiple playlists.
 
 ### 📝 Potential Challenges
 
-- **Rate Limits:** The Last.fm API has request limits, so caching or optimizing requests is important.
+- **Rate Limits:** The Last.fm API has request limits, so caching or request optimization may be required.
+- **Database Performance:** Optimizing queries to handle a large number of tracks efficiently.
+- **Frontend-Backend Communication:** Ensuring smooth integration between AJAX requests and Flask API responses.
 
 ---
 

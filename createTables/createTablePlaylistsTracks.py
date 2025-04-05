@@ -19,12 +19,13 @@ mycursor = connection.cursor()
 sql = """
 CREATE TABLE IF NOT EXISTS playlist_tracks (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    playlist_id INT NOT NULL,
-    track_id INT NOT NULL,
+    playlist_id INT,
+    track_id INT,
     added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (playlist_id) REFERENCES playlists(id) ON DELETE CASCADE,
     FOREIGN KEY (track_id) REFERENCES tracks(id) ON DELETE CASCADE
-);"""
+);
+"""
 # Execute the SQL statement
 mycursor.execute(sql)
 

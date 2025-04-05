@@ -22,9 +22,10 @@ CREATE TABLE IF NOT EXISTS tracks (
     title VARCHAR(255) NOT NULL,
     artist VARCHAR(255) NOT NULL,
     genre VARCHAR(100) DEFAULT NULL,
-    playcount INT DEFAULT NULL,
-    listeners INT DEFAULT NULL
-);
+    play_count INT DEFAULT NULL,
+    listeners INT DEFAULT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+););
 """
 # Execute the SQL statement
 mycursor.execute(sql)

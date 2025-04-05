@@ -3,6 +3,7 @@ import mysql.connector
 from dotenv import load_dotenv
 
 class PlaylistsDAO:
+    
     def __init__(self):
         """Initialize database connection using environment variables."""
         load_dotenv()  # Load from .env in the same directory
@@ -37,63 +38,91 @@ class PlaylistsDAO:
             self.connection.close()
             self.connection = None
             
-    def createUser(self, user):
-        """Insert a new user into the users table."""
-        cursor = self.getcursor()
-        sql = "INSERT INTO users (name, email) VALUES (%s, %s)"
-        values = (user["name"], user["email"])
-        cursor.execute(sql, values)
-        self.connection.commit()
-
-        # Get the newly created user ID
-        user["id"] = cursor.lastrowid
-
-        self.close()
-        return user
     
     def createTrack(self, track):
         """Insert a new track into the tracks table."""
         cursor = self.getcursor()
         sql = """
-            INSERT INTO tracks (title, artist, genre, playcount, listeners) 
+            INSERT INTO tracks (title, artist, genre, play_count, listeners) 
             VALUES (%s, %s, %s, %s, %s)
         """
         values = (
             track["title"], 
             track["artist"], 
             track.get("genre"),  # Use .get() to handle NULL values
-            track.get("playcount"), 
+            track.get("play_count"), 
             track.get("listeners")
         )
         cursor.execute(sql, values)
+        
         self.connection.commit()
-
         # Get the newly created track ID
         track["id"] = cursor.lastrowid
-
         self.close()
         return track
     
+    def update(self, id, track):
+        cursor = self.getcursor()
+
+        # Get current data
+        cursor.execute("SELECT * FROM tracks WHERE id = %s", (id,))
+        current = cursor.fetchone()
+        if not current:
+            print("Track not found.")
+            return None
+
+        # Use current values if not provided
+        title = track.get("title", current[1])
+        artist = track.get("artist", current[2])
+        genre = track.get("genre", current[3])
+        play_count = track.get("play_count", current[4])
+        listeners = track.get("listeners", current[5])
+
+        sql = """
+            UPDATE tracks 
+            SET title = %s, artist = %s, genre = %s, play_count = %s, listeners = %s 
+            WHERE id = %s
+        """
+        values = (title, artist, genre, play_count, listeners, id)
+
+        cursor.execute(sql, values)
+        self.connection.commit()
+        self.close()
+        return track
+    
+    def delete(self, id):
+        cursor = self.getcursor()
+        sql = "DELETE FROM tracks WHERE id = %s"
+        values = (id,)
+        cursor.execute(sql, values)
+        self.connection.commit()
+        self.close()
+        return {"message": "Track deleted successfully."}
 
 PlaylistsDAO = PlaylistsDAO()
 
 if __name__ == "__main__":
     
-    # Example Usage:
-    #dao = PlaylistsDAO()
-    #new_user = {"name": "Natan","email":"natan@gmail.com"}
-    #created_user = PlaylistsDAO.createUser(new_user)
-    #print(created_user)  # Output: {'name': 'Alice', 'id': 1}
-# Example Usage:
-
-
-    # Example track data without explicitly setting None
-    new_track = {
-        "title": "Shape of You",
-        "artist": "Ed Sheeran",
-        # genre, playcount, listeners are omitted, so they will default to NULL in the database
-    }
-    # Create the track
-    created_track = PlaylistsDAO.createTrack(new_track)
-    # Print the result
-    print(created_track)  # Expected output: {'title': 'Blinding Lights', 'artist': 'The Weeknd', 'id': <generated_id>}
+    ## Example track data without explicitly setting None
+    #new_track = {
+    #    "title": "Bad Habits",
+    #    "artist": "Ed Sheeran",
+    #    # genre, playcount, listeners are omitted, so they will default to NULL in the database
+    #}
+    ## Create the track
+    #created_track = PlaylistsDAO.createTrack(new_track)
+    ## Print the result
+    #print(created_track)  # Expected output: {'title': 'Blinding Lights', 'artist': 'The Weeknd', 'id': <generated_id>}
+    
+    
+    #track_id_to_update = 1
+    #updated_data = {
+    #     "genre": "Rock",
+    #    }
+    #result = PlaylistsDAO.update(track_id_to_update, updated_data)
+    #print("Track updated:", result)
+    
+    
+    track_id_to_delete = 1
+    result = PlaylistsDAO.delete(track_id_to_delete) 
+    print("Track deleted:", result)
