@@ -38,6 +38,35 @@ class PlaylistsDAO:
             self.connection.close()
             self.connection = None
             
+    def getAll(self):
+        cursor = self.getcursor()
+        sql="select * from tracks"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        returnArray = []
+        #print(results)
+        for result in results:
+            #print(result)
+            returnArray.append(self.convertToDictionary(result))
+        
+        self.close()
+        return returnArray
+
+    def findByID(self, id):
+        cursor = self.getcursor()
+        sql="select * from tracks where id = %s"
+        values = (id,)
+        cursor.execute(sql, values)
+        result = cursor.fetchone()
+        
+        if result:
+            returnvalue = self.convertToDictionary(result)
+        else:
+            returnvalue = None  # handle case when no match is found
+       
+        self.close()
+        return returnvalue
+
     
     def createTrack(self, track):
         """Insert a new track into the tracks table."""
@@ -98,6 +127,18 @@ class PlaylistsDAO:
         self.connection.commit()
         self.close()
         return {"message": "Track deleted successfully."}
+    
+    
+    def convertToDictionary(self, resultLine):
+        attkeys=['id','title','artist', 'genre', 'play_count', 'listeners', 'created_at']
+        track = {}
+        currentkey = 0
+        for attrib in resultLine:
+            track[attkeys[currentkey]] = attrib
+            currentkey = currentkey + 1 
+        return track
+
+
 
 PlaylistsDAO = PlaylistsDAO()
 
@@ -123,6 +164,17 @@ if __name__ == "__main__":
     #print("Track updated:", result)
     
     
-    track_id_to_delete = 1
-    result = PlaylistsDAO.delete(track_id_to_delete) 
-    print("Track deleted:", result)
+    #track_id_to_delete = 1
+    #result = PlaylistsDAO.delete(track_id_to_delete) 
+    #print("Track deleted:", result)
+    
+    #result = PlaylistsDAO.getAll()
+    #print("All tracks:", result)
+
+    idToSearch = 10
+    result = PlaylistsDAO.findByID(idToSearch)
+
+    if result:
+        print(f"Track with ID {idToSearch}:", result)
+    else:
+        print(f"No track found with ID {idToSearch}.")
