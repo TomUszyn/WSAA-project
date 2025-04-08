@@ -142,7 +142,7 @@ class PlaylistsDAO:
 
 PlaylistsDAO = PlaylistsDAO()
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
     
     ## Example track data without explicitly setting None
     #new_track = {
@@ -156,13 +156,13 @@ if __name__ == "__main__":
     #print(created_track)  # Expected output: {'title': 'Blinding Lights', 'artist': 'The Weeknd', 'id': <generated_id>}
     
     
-    #track_id_to_update = 1
+    #track_id_to_update = 3
     #updated_data = {
     #     "genre": "Rock",
     #    }
     #result = PlaylistsDAO.update(track_id_to_update, updated_data)
     #print("Track updated:", result)
-    
+    #
     
     #track_id_to_delete = 1
     #result = PlaylistsDAO.delete(track_id_to_delete) 
@@ -171,10 +171,10 @@ if __name__ == "__main__":
     #result = PlaylistsDAO.getAll()
     #print("All tracks:", result)
 
-    idToSearch = 10
-    result = PlaylistsDAO.findByID(idToSearch)
-
-    if result:
-        print(f"Track with ID {idToSearch}:", result)
-    else:
-        print(f"No track found with ID {idToSearch}.")
+    #idToSearch = 10
+    #result = PlaylistsDAO.findByID(idToSearch)
+#
+    #if result:
+    #    print(f"Track with ID {idToSearch}:", result)
+    #else:
+    #    print(f"No track found with ID {idToSearch}.")
