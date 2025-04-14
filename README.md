@@ -169,5 +169,5 @@ I am a student at Atlantic Technical University in Ireland, currently pursuing a
 * **Scripting**: Experience with Bash scripting and YAML for automation and configuration.
 * **Web Services**: Practical experience in creating and managing web applications with CRUD operations, dynamic interfaces using **AJAX**, and third-party API integration (such as **Last.fm API**).
 
-I am enthusiastic and hardworking, passionate about analysing real-world and virtual datasets. I enjoy working on data-driven projects that provide insights and drive decisions.b<r>
+I am enthusiastic and hardworking, passionate about analysing real-world and virtual datasets. I enjoy working on data-driven projects that provide insights and drive decisions.<br>
 [🔝 Back to Top](#table-of-contents)
