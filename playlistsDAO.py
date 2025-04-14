@@ -66,30 +66,60 @@ class PlaylistsDAO:
        
         self.close()
         return returnvalue
+    
+    def isDuplicateTrack(self, title, artist, closeAfter=True):
+        cursor = self.getcursor()
+        sql = """
+            SELECT COUNT(*) 
+            FROM tracks 
+            WHERE title = %s AND artist = %s
+        """
+        cursor.execute(sql, (title, artist))
+        result = cursor.fetchone()
+        if closeAfter:
+            self.close()
+        return result[0] > 0
+    
+    
+    def findExistingTrack(self, title, artist, closeAfter=True):
+       cursor = self.getcursor()
+       sql = """
+           SELECT * FROM tracks 
+           WHERE title = %s AND artist = %s
+           LIMIT 1
+       """
+       cursor.execute(sql, (title, artist))
+       result = cursor.fetchone()
+       if closeAfter:
+           self.close()
+       return self.convertToDictionary(result) if result else None
 
     
     def createTrack(self, track):
-        """Insert a new track into the tracks table."""
+        """Insert a new track into the tracks table with duplication check."""
+        if self.isDuplicateTrack(track["title"], track["artist"]):
+            existing = self.findExistingTrack(track["title"], track["artist"])
+            raise ValueError(f"Track already exists with ID {existing['id']}")
+
         cursor = self.getcursor()
         sql = """
-            INSERT INTO tracks (title, artist, genre, play_count, listeners) 
+            INSERT INTO tracks (title, artist, genre, play_count, listeners)
             VALUES (%s, %s, %s, %s, %s)
         """
         values = (
-            track["title"], 
-            track["artist"], 
-            track.get("genre"),  # Use .get() to handle NULL values
-            track.get("play_count"), 
-            track.get("listeners")
+            track["title"],
+            track["artist"],
+            track.get("genre"),
+            track.get("play_count", 0),
+            track.get("listeners", 0)
         )
         cursor.execute(sql, values)
-        
         self.connection.commit()
-        # Get the newly created track ID
         track["id"] = cursor.lastrowid
         self.close()
         return track
     
+        
     def update(self, id, track):
         cursor = self.getcursor()
 
@@ -106,6 +136,13 @@ class PlaylistsDAO:
         genre = track.get("genre", current[3])
         play_count = track.get("play_count", current[4])
         listeners = track.get("listeners", current[5])
+        
+        # Duplication check
+        if (title != current[1] or artist != current[2]) and \
+           self.isDuplicateTrack(title, artist, closeAfter=False):
+            print("Updated values would create duplicate track.")
+            self.close()
+            raise ValueError("Updated values would create a duplicate track.")
 
         sql = """
             UPDATE tracks 
@@ -140,41 +177,78 @@ class PlaylistsDAO:
 
 
 
-PlaylistsDAO = PlaylistsDAO()
+dao = PlaylistsDAO()
 
 #if __name__ == "__main__":
     
-    ## Example track data without explicitly setting None
-    #new_track = {
-    #    "title": "Bad Habits",
-    #    "artist": "Ed Sheeran",
-    #    # genre, playcount, listeners are omitted, so they will default to NULL in the database
-    #}
-    ## Create the track
-    #created_track = PlaylistsDAO.createTrack(new_track)
-    ## Print the result
-    #print(created_track)  # Expected output: {'title': 'Blinding Lights', 'artist': 'The Weeknd', 'id': <generated_id>}
-    
-    
-    #track_id_to_update = 3
-    #updated_data = {
-    #     "genre": "Rock",
-    #    }
-    #result = PlaylistsDAO.update(track_id_to_update, updated_data)
-    #print("Track updated:", result)
-    #
-    
-    #track_id_to_delete = 1
-    #result = PlaylistsDAO.delete(track_id_to_delete) 
-    #print("Track deleted:", result)
-    
-    #result = PlaylistsDAO.getAll()
-    #print("All tracks:", result)
+    #### Test: Create Track ###
+#   try:
+#       new_track = {
+#           "title": "test",
+#           "artist": "test",
+#           "genre": "Pop",
+#           "play_count": 1500000
+#           
+#       }
+#       created_track = dao.createTrack(new_track)
+#       print("Created:", created_track)
+#   except ValueError as e:
+#       print("Create Track Error:", e)
 
-    #idToSearch = 10
-    #result = PlaylistsDAO.findByID(idToSearch)
+
+
+   #### Test: Get All Tracks ####
+#    try:
+#        all_tracks = dao.getAll()
+#        print("All Tracks:", all_tracks)
+#    except Exception as e:
+#        print("Get All Error:", e)
+        
+   
+   
+   #### Test: Find by ID ####
+    
+#   track_id = 1
+#   track = dao.findByID(track_id)
+#   if track:
+#       print("Track found:", track)
+#   else:
+#       print(f"No track found with ID {track_id}.")
+    
+
+   #### Test: Update Track ####
+#   track_id = 3
+#   update_data = {
+#       "title": "Updated Title",
+#       "genre": "Pop Rock",
+#       "play_count": 1600000
+#   }
+#   
+#   try:
+#       updated_track = dao.update(track_id, update_data)
+#       print("Updated:", updated_track)
+#   except ValueError as e:
+#       print("Update Error:", e)
+
+
+
+   # === Test: Delete Track ===
+#    track_id = 31
+#    try:
+#        result = dao.delete(track_id)
+#        print("Delete Result:", result)
+#    except Exception as e:
+#        print("Delete Track Error:", e)
+
+
+    
+
+   
+
+   
+   
 #
-    #if result:
-    #    print(f"Track with ID {idToSearch}:", result)
-    #else:
-    #    print(f"No track found with ID {idToSearch}.")
+   
+   
+   
+   
