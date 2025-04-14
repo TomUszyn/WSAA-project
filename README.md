@@ -17,6 +17,8 @@ This repository contains the project for the "Web Services and Application" modu
 ## About
 
 The Music Playlist Organiser will be developed to demonstrate the techniques and knowledge covered in the Web Services and Application module. It will showcase key concepts like CRUD operations, API integration, dynamic web interfaces using Flask and AJAX, and database management with MySQL. Additionally, the project will highlight practical skills in hosting applications (on PythonAnywhere) and using third-party APIs, like Last.fm, to enhance user experience and functionality.
+[🔼 Back to Top](#about)
+
 
 
 
@@ -130,18 +132,31 @@ Allows tracks to be added multiple times to the same or different playlists.
 
 The repository includes the following files and structure:
 
+
+
+
+[🔼 Back to Top](#about)
+
 ## Getting Started
 
 To get started with this project, clone the repository to your local machine.
 
+
+
+
+[🔼 Back to Top](#about)
+
 ## License
 
 This repository is licensed under the MIT License - see the LICENSE file for more details.
+[🔼 Back to Top](#about)
+
 
 ## Acknowledgments
 
 The Music Playlist Organiser project has been developed to demonstrate the techniques and concepts covered in the Web Services and Application module. It highlights the implementation of CRUD operations, third-party API integration (such as the Last.fm API), dynamic web interfaces using Flask and AJAX, and database management with MySQL. The project also emphasises practical experience in hosting applications on PythonAnywhere.
 Special thanks are due to the lecturer for providing valuable guidance and resources throughout the module, enabling the application of theoretical knowledge to a real-world project. Furthermore, web resources like the Last.fm API documentation and online hosting services have played a crucial role in enhancing the development experience.
+[🔼 Back to Top](#about)
 
 ## Author
 
@@ -155,3 +170,4 @@ I am a student at Atlantic Technical University in Ireland, currently pursuing a
 * **Web Services**: Practical experience in creating and managing web applications with CRUD operations, dynamic interfaces using **AJAX**, and third-party API integration (such as **Last.fm API**).
 
 I am enthusiastic and hardworking, passionate about analysing real-world and virtual datasets. I enjoy working on data-driven projects that provide insights and drive decisions.
+[🔼 Back to Top](#about)

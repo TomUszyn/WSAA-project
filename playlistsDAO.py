@@ -1,9 +1,11 @@
 import os
 import mysql.connector
 from dotenv import load_dotenv
+import requests
 
 class PlaylistsDAO:
     
+    ## Initialize the database connection using environment variables.
     def __init__(self):
         """Initialize database connection using environment variables."""
         load_dotenv()  # Load from .env in the same directory
@@ -13,10 +15,13 @@ class PlaylistsDAO:
         self.user = os.getenv("DB_USER")
         self.password = os.getenv("DB_PASSWORD")
         self.database = os.getenv("DB_NAME")
+        self.API_key = os.getenv("API_KEY")
+        self.URL = "http://ws.audioscrobbler.com/2.0/"
 
         self.connection = None
         self.cursor = None
-
+        
+    # Establish a database connection and return a cursor
     def getcursor(self):
         """Establish and return a database cursor."""
         if self.connection is None or not self.connection.is_connected():
@@ -28,7 +33,8 @@ class PlaylistsDAO:
             )
             self.cursor = self.connection.cursor()
         return self.cursor
-
+    
+    # Close cursor and connection
     def close(self):
         """Close cursor and connection if open."""
         if self.cursor:
@@ -38,6 +44,7 @@ class PlaylistsDAO:
             self.connection.close()
             self.connection = None
             
+    # Get all tracks        
     def getAll(self):
         cursor = self.getcursor()
         sql="select * from tracks"
@@ -51,7 +58,8 @@ class PlaylistsDAO:
         
         self.close()
         return returnArray
-
+    
+    # Find a track by ID
     def findByID(self, id):
         cursor = self.getcursor()
         sql="select * from tracks where id = %s"
@@ -67,6 +75,7 @@ class PlaylistsDAO:
         self.close()
         return returnvalue
     
+    # Check if a track is a duplicate based on title and artist
     def isDuplicateTrack(self, title, artist, closeAfter=True):
         cursor = self.getcursor()
         sql = """
@@ -80,7 +89,7 @@ class PlaylistsDAO:
             self.close()
         return result[0] > 0
     
-    
+    # Find existing track by title and artist
     def findExistingTrack(self, title, artist, closeAfter=True):
        cursor = self.getcursor()
        sql = """
@@ -93,13 +102,40 @@ class PlaylistsDAO:
        if closeAfter:
            self.close()
        return self.convertToDictionary(result) if result else None
+   
+    # Fetch track information from Last.fm API using artist and title
+    def getTrackInfo(self, artist, title):
+        """Fetch track information from Last.fm API"""
+        params = {
+            'method': 'track.getInfo',
+            'api_key': self.API_key,
+            'artist': artist,
+            'track': title,
+            'format': 'json'
+        }
+        response = requests.get(self.URL, params=params)
+        data = response.json()
+        if 'track' in data:
+            return data['track']
+        return None
 
-    
+    # Create a new track with duplication check and auto-fill missing fields using Last.fm API
     def createTrack(self, track):
         """Insert a new track into the tracks table with duplication check."""
         if self.isDuplicateTrack(track["title"], track["artist"]):
             existing = self.findExistingTrack(track["title"], track["artist"])
             raise ValueError(f"Track already exists with ID {existing['id']}")
+        
+        # Auto-fill missing fields using Last.fm
+        info = self.getTrackInfo(track["artist"], track["title"])
+        if info:
+            if "genre" not in track or not track.get("genre"):
+                if "toptags" in info and "tag" in info["toptags"] and info["toptags"]["tag"]:
+                    track["genre"] = info["toptags"]["tag"][0]["name"]
+            if "play_count" not in track or not track.get("play_count"):
+                track["play_count"] = int(info.get("playcount", 0))
+            if "listeners" not in track or not track.get("listeners"):
+                track["listeners"] = int(info.get("listeners", 0))
 
         cursor = self.getcursor()
         sql = """
@@ -119,7 +155,7 @@ class PlaylistsDAO:
         self.close()
         return track
     
-        
+    # Update an existing track with duplication check    
     def update(self, id, track):
         cursor = self.getcursor()
 
@@ -156,6 +192,7 @@ class PlaylistsDAO:
         self.close()
         return track
     
+    # Delete a track by ID
     def delete(self, id):
         cursor = self.getcursor()
         sql = "DELETE FROM tracks WHERE id = %s"
@@ -184,11 +221,8 @@ dao = PlaylistsDAO()
     #### Test: Create Track ###
 #   try:
 #       new_track = {
-#           "title": "test",
-#           "artist": "test",
-#           "genre": "Pop",
-#           "play_count": 1500000
-#           
+#           "title": "Kayleigh",
+#           "artist": "Marillion",       
 #       }
 #       created_track = dao.createTrack(new_track)
 #       print("Created:", created_track)
@@ -239,16 +273,3 @@ dao = PlaylistsDAO()
 #        print("Delete Result:", result)
 #    except Exception as e:
 #        print("Delete Track Error:", e)
-
-
-    
-
-   
-
-   
-   
-#
-   
-   
-   
-   
