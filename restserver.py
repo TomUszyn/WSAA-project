@@ -1,21 +1,18 @@
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, render_template
 from playlistsDAO import PlaylistsDAO
 from datetime import datetime
-
-
 
 
 app = Flask(__name__)
 dao = PlaylistsDAO()
 
-
+# The index route serves the main HTML page
 @app.route('/')
 def index():
-    return "Hello, World!"
-
+    return render_template('index.html')
 
 # Get all tracks
-@app.route('/tracks', methods=['GET'])
+@app.route('/api/tracks', methods=['GET'])
 def get_all_tracks():
     try:
         tracks = dao.getAll()
@@ -23,9 +20,8 @@ def get_all_tracks():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 # Get track by ID
-@app.route('/tracks/<int:track_id>', methods=['GET'])
+@app.route('/api/tracks/<int:track_id>', methods=['GET'])
 def get_track(track_id):
     try:
         track = dao.findByID(track_id)
@@ -36,9 +32,8 @@ def get_track(track_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 # Create a new track
-@app.route('/tracks', methods=['POST'])
+@app.route('/api/tracks', methods=['POST'])
 def create_track():
     try:
         data = request.get_json()
@@ -51,9 +46,8 @@ def create_track():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 # Update track
-@app.route('/tracks/<int:track_id>', methods=['PUT'])
+@app.route('/api/tracks/<int:track_id>', methods=['PUT'])
 def update_track(track_id):
     try:
         data = request.get_json()
@@ -64,16 +58,14 @@ def update_track(track_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
- 
  # Delete track
-@app.route('/tracks/<int:track_id>', methods=['DELETE'])
+@app.route('/api/tracks/<int:track_id>', methods=['DELETE'])
 def delete_track(track_id):
     try:
         result = dao.delete(track_id)
         return jsonify(result)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 if __name__ == '__main__' :
     app.run(debug= True)

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Music Playlist Organiser</title>
+
+    <!-- jQuery for AJAX and DOM handling -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Bootstrap for styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Music Playlist Organiser</h1>
+
+        <!-- Action buttons at the top -->
+        <div id="topButtons" class="mb-4">
+            <button onclick="showCreateTrack()" class="btn btn-primary mr-2">Create Track</button>
+            <button onclick="showCreatePlaylist()" class="btn btn-success mr-2">Create Playlist</button>
+            <button onclick="showPlaylists()" class="btn btn-info">Show Playlists</button>
+        </div>
+
+        <!-- Table to display track data -->
+        <table class="table" id="trackTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Artist</th>
+                    <th>Title</th>
+                    <th>Genre</th>
+                    <th>Playcount</th>
+                    <th>Listeners</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="trackListBody">
+                <!-- Tracks will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        
+    </script>
+</body>
+</html>
