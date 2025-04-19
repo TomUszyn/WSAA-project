@@ -21,6 +21,35 @@
             <button onclick="showPlaylists()" class="btn btn-info">Show Playlists</button>
         </div>
 
+        <!-- Create Track Form (Initially Hidden) -->
+        <div id="createTrackForm" class="mb-4" style="display: none;">
+            <h3>Create New Track</h3>
+            <form>
+                <div class="form-group">
+                    <label for="artist">Artist</label>
+                    <input type="text" class="form-control" id="artist" placeholder="Enter artist">
+                </div>
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" placeholder="Enter title">
+                </div>
+                <div class="form-group">
+                    <label for="genre">Genre</label>
+                    <input type="text" class="form-control" id="genre" placeholder="Enter genre">
+                </div>
+                <div class="form-group">
+                    <label for="playcount">Playcount</label>
+                    <input type="number" class="form-control" id="playcount" placeholder="Enter playcount">
+                </div>
+                <div class="form-group">
+                    <label for="listeners">Listeners</label>
+                    <input type="number" class="form-control" id="listeners" placeholder="Enter listeners">
+                </div>
+                <button type="submit" class="btn btn-primary">Save (Coming Soon)</button>
+                <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+            </form>
+        </div>
+
         <!-- === Track Table === -->
         <table class="table" id="trackTable">
             <thead>
@@ -76,6 +105,22 @@
                 });
             });
         }
+
+
+        // Show the Create Track form and hide other sections
+        function showCreateTrack() {
+            document.getElementById('createTrackForm').style.display = 'block';
+            document.getElementById('trackTable').style.display = 'none';
+            document.getElementById('topButtons').style.display = 'none';
+        }
+    
+        // Return to the main track table
+        function goBack() {
+            document.getElementById('createTrackForm').style.display = 'none';
+            document.getElementById('trackTable').style.display = 'table';
+            document.getElementById('topButtons').style.display = 'block';
+        }
+
     </script>
 </body>
 </html>
