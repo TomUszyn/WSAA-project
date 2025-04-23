@@ -216,18 +216,18 @@ class PlaylistsDAO:
 
 dao = PlaylistsDAO()
 
-#if __name__ == "__main__":
-    
-    #### Test: Create Track ###
-#   try:
-#       new_track = {
-#           "title": "Kayleigh",
-#           "artist": "Marillion",       
-#       }
-#       created_track = dao.createTrack(new_track)
-#       print("Created:", created_track)
-#   except ValueError as e:
-#       print("Create Track Error:", e)
+if __name__ == "__main__":
+   
+   #### Test: Create Track ###
+   try:
+       new_track = {
+           "title": "dasdsad",
+           "artist": "xczxz",       
+       }
+       created_track = dao.createTrack(new_track)
+       print("Created:", created_track)
+   except ValueError as e:
+       print("Create Track Error:", e)
 
 
 

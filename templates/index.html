@@ -40,9 +40,95 @@
                 <tbody></tbody>
             </table>
         </div>
+
+        <div id='createUpdateForm' style="display: none" class="mt-4">
+            <h2><span id="createLabel">Create a</span> <span id="updateLabel">update</span> Track</h2>
+            <input type="hidden" name="id"/>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Artist</label>
+                <input type="text" name="artist" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Genre</label>
+                <input type="text" name="genre" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Play Count</label>
+                <input type="number" name="play_count" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Listeners</label>
+                <input type="number" name="listeners" class="form-control" />
+            </div>
+            <div>
+                <button id="doCreateButton" onclick="doCreate()" class="btn btn-success">Create</button>
+                <button id="doUpdateButton" onclick="doUpdate()" class="btn btn-warning">Update</button>
+            </div>
+        </div>
+        
+
+
+
     </div>
 
     <script>
+        
+        function showCreate(){
+            document.getElementById('showCreateButton').style.display="none"
+            document.getElementById('trackTable').style.display="none"
+            document.getElementById('createUpdateForm').style.display="block"
+            document.getElementById('topButtons').style.display = "none"
+
+            document.getElementById('createLabel').style.display="inline"
+            document.getElementById('updateLabel').style.display="none"
+
+            document.getElementById('doCreateButton').style.display="block"
+            document.getElementById('doUpdateButton').style.display="none"
+
+            var form = document.getElementById('createUpdateForm');
+            form.querySelector('input[name="id"]').value = '';
+            form.querySelector('input[name="title"]').value = '';
+            form.querySelector('input[name="artist"]').value = '';
+            form.querySelector('input[name="genre"]').value = '';
+            form.querySelector('input[name="play_count"]').value = '';
+            form.querySelector('input[name="listeners"]').value = '';
+            }
+    
+        function showViewAll(){
+            document.getElementById('showCreateButton').style.display="block"
+            document.getElementById('trackTable').style.display="block"
+            document.getElementById('createUpdateForm').style.display="none"
+            document.getElementById('topButtons').style.display = "block"
+            }
+
+        
+
+        function doCreate(){
+            var form = document.getElementById('createUpdateForm')
+            var track = {
+                title: form.querySelector('input[name="title"]').value,
+                artist: form.querySelector('input[name="artist"]').value,
+                genre: form.querySelector('input[name="genre"]').value,
+                play_count: form.querySelector('input[name="play_count"]').value,
+                listeners: form.querySelector('input[name="listeners"]').value
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/tracks',
+                data: JSON.stringify(track),
+                contentType: "application/json",
+                success: function(){
+                    location.reload()
+                }
+            });
+        }
+
+        
         // Fetches all tracks from the backend and populates the table
         function getAll(){
             $.ajax({
