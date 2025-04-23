@@ -106,27 +106,36 @@
             }
 
         
-
-        function doCreate(){
-            var form = document.getElementById('createUpdateForm')
+        function doCreate() {
+            var form = document.getElementById('createUpdateForm');
+                
+            var playCountRaw = form.querySelector('input[name="play_count"]').value;
+            var listenersRaw = form.querySelector('input[name="listeners"]').value;
+                
+            var playCount = playCountRaw === "" ? 0 : parseInt(playCountRaw);
+            var listeners = listenersRaw === "" ? 0 : parseInt(listenersRaw);
+                
+            var genreRaw = form.querySelector('input[name="genre"]').value;
+            var genre = genreRaw.trim() === "" ? null : genreRaw.trim();
+                
             var track = {
                 title: form.querySelector('input[name="title"]').value,
                 artist: form.querySelector('input[name="artist"]').value,
-                genre: form.querySelector('input[name="genre"]').value,
-                play_count: form.querySelector('input[name="play_count"]').value,
-                listeners: form.querySelector('input[name="listeners"]').value
-            }
-
+                genre: genre,
+                play_count: playCount,
+                listeners: listeners
+            };
+        
             $.ajax({
                 type: 'POST',
                 url: '/api/tracks',
                 data: JSON.stringify(track),
                 contentType: "application/json",
-                success: function(){
-                    location.reload()
+                success: function () {
+                    location.reload();
                 }
             });
-        }
+}
 
         
         // Fetches all tracks from the backend and populates the table

@@ -44,6 +44,7 @@ def create_track():
     except ValueError as e:
         return jsonify({"error": str(e)}), 409
     except Exception as e:
+        app.logger.error(f"Error occurred: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 # Update track
