@@ -103,6 +103,45 @@
         document.getElementById('topButtons').style.display = "block";
     }
 
+    function showUpdate(buttonElement){
+        document.getElementById('showCreateButton').style.display="none"
+        document.getElementById('trackTable').style.display="none"
+        document.getElementById('createUpdateForm').style.display="block"
+        document.getElementById('topButtons').style.display = "none"
+
+        document.getElementById('createLabel').style.display="none"
+        document.getElementById('updateLabel').style.display="inline"
+
+        document.getElementById('doCreateButton').style.display="none"
+        document.getElementById('doUpdateButton').style.display="block"
+
+        var rowElement = buttonElement.parentNode.parentNode
+        var track = getTrackFromRow(rowElement)
+        populateFormWithTrack(track)
+    }
+
+    function getTrackFromRow(row){
+        return {
+            id: row.cells[0].innerText,
+            title: row.cells[1].innerText,
+            artist: row.cells[2].innerText,
+            genre: row.cells[3].innerText,
+            play_count: row.cells[4].innerText,
+            listeners: row.cells[5].innerText
+        }
+    }
+
+    function populateFormWithTrack(track){
+        var form = document.getElementById('createUpdateForm')
+        form.querySelector('input[name="id"]').value = track.id
+        form.querySelector('input[name="title"]').value = track.title
+        form.querySelector('input[name="artist"]').value = track.artist
+        form.querySelector('input[name="genre"]').value = track.genre
+        form.querySelector('input[name="play_count"]').value = track.play_count
+        form.querySelector('input[name="listeners"]').value = track.listeners
+    }
+
+
     function doCreate() {
         var form = document.getElementById('createUpdateForm');
 
@@ -157,6 +196,34 @@
             }
         });
     }
+
+    function doUpdate(){
+        var form = document.getElementById('createUpdateForm')
+        var id = form.querySelector('input[name="id"]').value
+        var track = {
+            title: form.querySelector('input[name="title"]').value,
+            artist: form.querySelector('input[name="artist"]').value,
+            genre: form.querySelector('input[name="genre"]').value,
+            play_count: form.querySelector('input[name="play_count"]').value,
+            listeners: form.querySelector('input[name="listeners"]').value
+        }
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/tracks/' + id,
+            data: JSON.stringify(track),
+            contentType: "application/json",
+            success: function(){
+                location.reload()
+            },
+            error: function(xhr) {
+                if (xhr.status === 409) {
+                    alert("Update failed: a track with the same title and artist already exists.");
+                }
+            }
+        });
+    }
+
 
     // Fetches all tracks from the backend and populates the table
     function getAll(){
