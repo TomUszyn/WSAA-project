@@ -41,6 +41,25 @@
         </table>
     </div>
 
+    <!-- Playlist Table (Hidden initially) -->
+    <div id="playlistTableDiv" style="display: none;">
+        <h2>Playlists</h2>
+        <table class="table table-bordered" id="playlistTable">
+            <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                    <th>View Tracks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic content to be added here -->
+            </tbody>
+        </table>
+    </div>
+    
     <!-- Form for creating/updating tracks -->
     <div id='createUpdateForm' style="display: none" class="mt-4">
         <h2><span id="createLabel">Create a</span> <span id="updateLabel">update</span> Track</h2>
@@ -72,9 +91,42 @@
             <button id="doUpdateButton" onclick="doUpdate()" class="btn btn-warning">Update</button>
         </div>
     </div>
+
+    <!-- Playlist Creation Form (Hidden initially) -->
+    <div id="createPlaylistForm" style="display: none;" class="mt-4">
+        <h2>Create Playlist</h2>
+        <div class="form-group">
+            <label>Playlist Name</label>
+            <input type="text" name="playlist_name" class="form-control" />
+            <small id="playlistNameError" class="text-danger" style="display: none;">Playlist name is required</small>
+        </div>
+        <div>
+            <button id="doCreatePlaylistButton" onclick="doCreatePlaylist()" class="btn btn-success">Create Playlist</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
+
+    // Show Playlist Creation Form
+    function showCreatePlaylist() {
+        document.getElementById('createPlaylistForm').style.display = "block";
+        document.getElementById('playlistTableDiv').style.display = "none";
+        document.getElementById('trackTable').style.display = "none"; // Hide the track table
+        document.getElementById('createUpdateForm').style.display = "none"; // Hide the track create/update form
+        document.getElementById('topButtons').style.display = "none"; // Hide the top buttons
+    }
+
+    // Show Playlists Table
+    function showPlaylists() {
+        document.getElementById('createPlaylistForm').style.display = "none"; // Hide the playlist creation form
+        document.getElementById('playlistTableDiv').style.display = "block"; // Show the playlists table
+        document.getElementById('trackTable').style.display = "none"; // Hide the track table
+        document.getElementById('createUpdateForm').style.display = "none"; // Hide the track create/update form
+        document.getElementById('topButtons').style.display = "none"; // Show the top buttons
+    }
+
     function showCreate(){
         document.getElementById('showCreateButton').style.display="none";
         document.getElementById('trackTable').style.display="none";
@@ -140,7 +192,6 @@
         form.querySelector('input[name="play_count"]').value = track.play_count
         form.querySelector('input[name="listeners"]').value = track.listeners
     }
-
 
     function doCreate() {
         var form = document.getElementById('createUpdateForm');
@@ -243,27 +294,25 @@
         $.ajax({
             type: 'GET',
             url: '/api/tracks',
-            success: function(tracks){
-                var table = document.getElementById("trackTable").getElementsByTagName('tbody')[0];
-                table.innerHTML = ""; // Clear existing rows
-                for (var i = 0; i < tracks.length; i++){
-                    var row = table.insertRow(-1);
-                    row.insertCell(0).innerText = tracks[i].id;
-                    row.insertCell(1).innerText = tracks[i].title;
-                    row.insertCell(2).innerText = tracks[i].artist;
-                    row.insertCell(3).innerText = tracks[i].genre;
-                    row.insertCell(4).innerText = tracks[i].play_count;
-                    row.insertCell(5).innerText = tracks[i].listeners;
-                    row.insertCell(6).innerHTML = '<button onclick="showUpdate(this)" class="btn btn-warning btn-sm">Update</button>';
-                    row.insertCell(7).innerHTML = '<button onclick="doDelete(this)" class="btn btn-danger btn-sm">Delete</button>';
-                    row.insertCell(8).innerHTML = '<button class="btn btn-secondary btn-sm">Add</button>';
-                }
+            success: function(response){
+                var trackTable = document.getElementById('trackTable').getElementsByTagName('tbody')[0];
+                response.forEach(track => {
+                    var row = trackTable.insertRow();
+                    row.insertCell(0).innerText = track.id;
+                    row.insertCell(1).innerText = track.title;
+                    row.insertCell(2).innerText = track.artist;
+                    row.insertCell(3).innerText = track.genre;
+                    row.insertCell(4).innerText = track.play_count;
+                    row.insertCell(5).innerText = track.listeners;
+                    row.insertCell(6).innerHTML = "<button onclick='showUpdate(this)' class='btn btn-warning'>Update</button>";
+                    row.insertCell(7).innerHTML = "<button onclick='doDelete(this)' class='btn btn-danger'>Delete</button>";
+                    row.insertCell(8).innerHTML = "<button onclick='addTrackToPlaylist(this)' class='btn btn-info'>Add to Playlist</button>";
+                });
             }
         });
     }
 
-    // Initial load
-    getAll();
+    getAll(); // Fetch and display the track data when the page loads
 </script>
 </body>
 </html>
