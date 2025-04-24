@@ -11,160 +11,179 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container mt-4">
-        <h1>Music Playlist Organiser</h1>
+<div class="container mt-4">
+    <h1>Music Playlist Organiser</h1>
 
-        <!-- Top control buttons -->
-        <div class="mb-3" id="topButtons">
-            <button id="showCreateButton" onclick="showCreate()" class="btn btn-primary mr-2">Create</button>
-            <button onclick="showCreatePlaylist()" class="btn btn-success mr-2">Create Playlist</button>
-            <button onclick="showPlaylists()" class="btn btn-info">Show Playlists</button>
-        </div>
-
-        <!-- Table displaying all tracks -->
-        <div>
-            <table class="table table-bordered" id="trackTable">
-                <thead class="thead-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Artist</th>
-                        <th>Genre</th>
-                        <th>Play Count</th>
-                        <th>Listeners</th>
-                        <th>Update</th>
-                        <th>Delete</th>
-                        <th>Add</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <div id='createUpdateForm' style="display: none" class="mt-4">
-            <h2><span id="createLabel">Create a</span> <span id="updateLabel">update</span> Track</h2>
-            <input type="hidden" name="id"/>
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" name="title" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Artist</label>
-                <input type="text" name="artist" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Genre</label>
-                <input type="text" name="genre" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Play Count</label>
-                <input type="number" name="play_count" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Listeners</label>
-                <input type="number" name="listeners" class="form-control" />
-            </div>
-            <div>
-                <button id="doCreateButton" onclick="doCreate()" class="btn btn-success">Create</button>
-                <button id="doUpdateButton" onclick="doUpdate()" class="btn btn-warning">Update</button>
-            </div>
-        </div>
-        
-
-
-
+    <!-- Top control buttons -->
+    <div class="mb-3" id="topButtons">
+        <button id="showCreateButton" onclick="showCreate()" class="btn btn-primary mr-2">Create</button>
+        <button onclick="showCreatePlaylist()" class="btn btn-success mr-2">Create Playlist</button>
+        <button onclick="showPlaylists()" class="btn btn-info">Show Playlists</button>
     </div>
 
-    <script>
-        
-        function showCreate(){
-            document.getElementById('showCreateButton').style.display="none"
-            document.getElementById('trackTable').style.display="none"
-            document.getElementById('createUpdateForm').style.display="block"
-            document.getElementById('topButtons').style.display = "none"
+    <!-- Table displaying all tracks -->
+    <div>
+        <table class="table table-bordered" id="trackTable">
+            <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Genre</th>
+                    <th>Play Count</th>
+                    <th>Listeners</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                    <th>Add</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
-            document.getElementById('createLabel').style.display="inline"
-            document.getElementById('updateLabel').style.display="none"
+    <!-- Form for creating/updating tracks -->
+    <div id='createUpdateForm' style="display: none" class="mt-4">
+        <h2><span id="createLabel">Create a</span> <span id="updateLabel">update</span> Track</h2>
+        <input type="hidden" name="id"/>
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" class="form-control" />
+            <small id="titleError" class="text-danger" style="display: none;">Title is required</small>
+        </div>
+        <div class="form-group">
+            <label>Artist</label>
+            <input type="text" name="artist" class="form-control" />
+            <small id="artistError" class="text-danger" style="display: none;">Artist is required</small>
+        </div>
+        <div class="form-group">
+            <label>Genre</label>
+            <input type="text" name="genre" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Play Count</label>
+            <input type="number" name="play_count" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Listeners</label>
+            <input type="number" name="listeners" class="form-control" />
+        </div>
+        <div>
+            <button id="doCreateButton" onclick="doCreate()" class="btn btn-success">Create</button>
+            <button id="doUpdateButton" onclick="doUpdate()" class="btn btn-warning">Update</button>
+        </div>
+    </div>
+</div>
 
-            document.getElementById('doCreateButton').style.display="block"
-            document.getElementById('doUpdateButton').style.display="none"
+<script>
+    function showCreate(){
+        document.getElementById('showCreateButton').style.display="none";
+        document.getElementById('trackTable').style.display="none";
+        document.getElementById('createUpdateForm').style.display="block";
+        document.getElementById('topButtons').style.display = "none";
 
-            var form = document.getElementById('createUpdateForm');
-            form.querySelector('input[name="id"]').value = '';
-            form.querySelector('input[name="title"]').value = '';
-            form.querySelector('input[name="artist"]').value = '';
-            form.querySelector('input[name="genre"]').value = '';
-            form.querySelector('input[name="play_count"]').value = '';
-            form.querySelector('input[name="listeners"]').value = '';
-            }
-    
-        function showViewAll(){
-            document.getElementById('showCreateButton').style.display="block"
-            document.getElementById('trackTable').style.display="block"
-            document.getElementById('createUpdateForm').style.display="none"
-            document.getElementById('topButtons').style.display = "block"
-            }
+        document.getElementById('createLabel').style.display="inline";
+        document.getElementById('updateLabel').style.display="none";
 
-        
-        function doCreate() {
-            var form = document.getElementById('createUpdateForm');
-                
-            var playCountRaw = form.querySelector('input[name="play_count"]').value;
-            var listenersRaw = form.querySelector('input[name="listeners"]').value;
-                
-            var playCount = playCountRaw === "" ? 0 : parseInt(playCountRaw);
-            var listeners = listenersRaw === "" ? 0 : parseInt(listenersRaw);
-                
-            var genreRaw = form.querySelector('input[name="genre"]').value;
-            var genre = genreRaw.trim() === "" ? null : genreRaw.trim();
-                
-            var track = {
-                title: form.querySelector('input[name="title"]').value,
-                artist: form.querySelector('input[name="artist"]').value,
-                genre: genre,
-                play_count: playCount,
-                listeners: listeners
-            };
-        
-            $.ajax({
-                type: 'POST',
-                url: '/api/tracks',
-                data: JSON.stringify(track),
-                contentType: "application/json",
-                success: function () {
-                    location.reload();
-                }
-            });
-}
+        document.getElementById('doCreateButton').style.display="block";
+        document.getElementById('doUpdateButton').style.display="none";
 
-        
-        // Fetches all tracks from the backend and populates the table
-        function getAll(){
-            $.ajax({
-                type: 'GET',
-                url: '/api/tracks',  // API endpoint for fetching track data
-                success: function(tracks){
-                    var table = document.getElementById("trackTable").getElementsByTagName('tbody')[0];
-                    
-                    // Insert each track as a row in the table
-                    for (var i = 0; i < tracks.length; i++){
-                        var row = table.insertRow(-1);
-                        row.insertCell(0).innerText = tracks[i].id;
-                        row.insertCell(1).innerText = tracks[i].title;
-                        row.insertCell(2).innerText = tracks[i].artist;
-                        row.insertCell(3).innerText = tracks[i].genre;
-                        row.insertCell(4).innerText = tracks[i].play_count;
-                        row.insertCell(5).innerText = tracks[i].listeners;
-                        row.insertCell(6).innerHTML =  '<button onclick="showUpdate(this)" class="btn btn-warning btn-sm">Update</button>';
-                        row.insertCell(7).innerHTML =  '<button onclick="doDelete(this)" class="btn btn-danger btn-sm">Delete</button>';
-                        row.insertCell(8).innerHTML =  '<button class="btn btn-secondary btn-sm">Add</button>';
-                    }
-                }
-            });
+        var form = document.getElementById('createUpdateForm');
+        form.querySelector('input[name="id"]').value = '';
+        form.querySelector('input[name="title"]').value = '';
+        form.querySelector('input[name="artist"]').value = '';
+        form.querySelector('input[name="genre"]').value = '';
+        form.querySelector('input[name="play_count"]').value = '';
+        form.querySelector('input[name="listeners"]').value = '';
+    }
+
+    function showViewAll(){
+        document.getElementById('showCreateButton').style.display="block";
+        document.getElementById('trackTable').style.display="block";
+        document.getElementById('createUpdateForm').style.display="none";
+        document.getElementById('topButtons').style.display = "block";
+    }
+
+    function doCreate() {
+        var form = document.getElementById('createUpdateForm');
+
+        var playCountRaw = form.querySelector('input[name="play_count"]').value;
+        var listenersRaw = form.querySelector('input[name="listeners"]').value;
+
+        var playCount = playCountRaw === "" ? 0 : parseInt(playCountRaw);
+        var listeners = listenersRaw === "" ? 0 : parseInt(listenersRaw);
+
+        var genreRaw = form.querySelector('input[name="genre"]').value;
+        var genre = genreRaw.trim() === "" ? null : genreRaw.trim();
+
+        var track = {
+            title: form.querySelector('input[name="title"]').value,
+            artist: form.querySelector('input[name="artist"]').value,
+            genre: genre,
+            play_count: playCount,
+            listeners: listeners
+        };
+
+        // Clear error messages
+        document.getElementById("titleError").style.display = 'none';
+        document.getElementById("artistError").style.display = 'none';
+
+        // Validation
+        if (!track.title) {
+            document.getElementById("titleError").style.display = 'block';
+            return false;
         }
 
-        // Run on page load
-        getAll();
-    </script>
+        if (!track.artist) {
+            document.getElementById("artistError").style.display = 'block';
+            return false;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/tracks',
+            data: JSON.stringify(track),
+            contentType: "application/json",
+            success: function () {
+                location.reload();
+            },
+            error: function(xhr) {
+                if (xhr.status === 409) {
+                    alert("This track already exists.");
+                } else if (xhr.status === 400) {
+                    alert("Invalid input.");
+                } else {
+                    alert("Something went wrong.");
+                }
+            }
+        });
+    }
+
+    // Fetches all tracks from the backend and populates the table
+    function getAll(){
+        $.ajax({
+            type: 'GET',
+            url: '/api/tracks',
+            success: function(tracks){
+                var table = document.getElementById("trackTable").getElementsByTagName('tbody')[0];
+                table.innerHTML = ""; // Clear existing rows
+                for (var i = 0; i < tracks.length; i++){
+                    var row = table.insertRow(-1);
+                    row.insertCell(0).innerText = tracks[i].id;
+                    row.insertCell(1).innerText = tracks[i].title;
+                    row.insertCell(2).innerText = tracks[i].artist;
+                    row.insertCell(3).innerText = tracks[i].genre;
+                    row.insertCell(4).innerText = tracks[i].play_count;
+                    row.insertCell(5).innerText = tracks[i].listeners;
+                    row.insertCell(6).innerHTML = '<button onclick="showUpdate(this)" class="btn btn-warning btn-sm">Update</button>';
+                    row.insertCell(7).innerHTML = '<button onclick="doDelete(this)" class="btn btn-danger btn-sm">Delete</button>';
+                    row.insertCell(8).innerHTML = '<button class="btn btn-secondary btn-sm">Add</button>';
+                }
+            }
+        });
+    }
+
+    // Initial load
+    getAll();
+</script>
 </body>
 </html>
