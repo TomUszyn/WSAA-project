@@ -212,6 +212,21 @@ class PlaylistsDAO:
             currentkey = currentkey + 1 
         return track
     
+        
+    def createPlaylist(self, playlist):
+        """Insert a new playlist into the playlists table."""
+        cursor = self.getcursor()
+        sql = "INSERT INTO playlists (name) VALUES (%s)"
+        try:
+            cursor.execute(sql, (playlist["name"],))
+            self.connection.commit()
+            playlist["id"] = cursor.lastrowid
+            return playlist
+        except mysql.connector.IntegrityError as e:
+            raise ValueError("Playlist with this name already exists.")
+        finally:
+            self.close()
+
 
 
 dao = PlaylistsDAO()

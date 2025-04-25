@@ -288,6 +288,38 @@
         });
     }
 
+        // Create a new playlist
+        function doCreatePlaylist() {
+            var form = document.getElementById('createPlaylistForm');
+            var playlistName = form.querySelector('input[name="playlist_name"]').value;
+
+            if (!playlistName) {
+                document.getElementById("playlistNameError").style.display = 'block';
+                return false;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/playlists',
+                data: JSON.stringify({ name: playlistName }),
+                contentType: "application/json",
+                success: function () {
+                    // Clear the input field after success
+                    form.querySelector('input[name="playlist_name"]').value = '';
+                    location.reload();
+                },
+                error: function(xhr) {
+                    if (xhr.status === 409) {
+                        alert("Playlist with this name already exists.");
+                    } else if (xhr.status === 400) {
+                        alert("Invalid input.");
+                    } else {
+                        alert("Something went wrong.");
+                    }
+                }
+            });
+        }
+
 
     // Fetches all tracks from the backend and populates the table
     function getAll(){
