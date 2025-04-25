@@ -68,6 +68,15 @@ def delete_track(track_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+# Get all playlists
+@app.route('/api/playlists', methods=['GET'])
+def show_playlists():
+    try:
+        playlists = dao.getAllPlaylists()
+        return jsonify(playlists)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
     
 @app.route('/api/playlists', methods=['POST'])
 def create_playlist():

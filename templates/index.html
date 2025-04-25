@@ -120,11 +120,12 @@
 
     // Show Playlists Table
     function showPlaylists() {
-        document.getElementById('createPlaylistForm').style.display = "none"; // Hide the playlist creation form
-        document.getElementById('playlistTableDiv').style.display = "block"; // Show the playlists table
-        document.getElementById('trackTable').style.display = "none"; // Hide the track table
-        document.getElementById('createUpdateForm').style.display = "none"; // Hide the track create/update form
-        document.getElementById('topButtons').style.display = "none"; // Show the top buttons
+        document.getElementById('createPlaylistForm').style.display = "none"; 
+        document.getElementById('playlistTableDiv').style.display = "block";
+        document.getElementById('trackTable').style.display = "none"; 
+        document.getElementById('createUpdateForm').style.display = "none";
+        document.getElementById('topButtons').style.display = "none";
+        getAllPlaylists();
     }
 
     function showCreate(){
@@ -343,6 +344,27 @@
             }
         });
     }
+
+    // Fetches all playlists from the backend and populates the playlist table
+    function getAllPlaylists() {
+        $.ajax({
+            type: 'GET',
+            url: '/api/playlists',
+            success: function(response) {
+                var playlistTable = document.getElementById('playlistTable').getElementsByTagName('tbody')[0];
+                playlistTable.innerHTML = ''; // Clear existing rows
+                response.forEach(playlist => {
+                    var row = playlistTable.insertRow();
+                    row.insertCell(0).innerText = playlist.id;
+                    row.insertCell(1).innerText = playlist.name;
+                    row.insertCell(2).innerHTML = "<button onclick='showUpdatePlaylist(this)' class='btn btn-warning'>Update</button>";
+                    row.insertCell(3).innerHTML = "<button onclick='doDeletePlaylist(this)' class='btn btn-danger'>Delete</button>";
+                    row.insertCell(4).innerHTML = "<button onclick='viewPlaylistTracks(this)' class='btn btn-info'>View Tracks</button>";
+                });
+            }
+        });
+    }
+
 
     getAll(); // Fetch and display the track data when the page loads
 </script>

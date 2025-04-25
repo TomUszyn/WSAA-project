@@ -227,6 +227,24 @@ class PlaylistsDAO:
         finally:
             self.close()
 
+    # Get all playlists
+    def getAllPlaylists(self):
+        cursor = self.getcursor()
+        sql = "SELECT * FROM playlists"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        playlists = []
+        for result in results:
+            playlists.append(self.convertPlaylistToDictionary(result))
+        self.close()
+        return playlists
+    
+    def convertPlaylistToDictionary(self, resultLine):
+        keys = ['id', 'name', 'created_at']
+        playlist = {}
+        for i in range(len(resultLine)):
+            playlist[keys[i]] = resultLine[i]
+        return playlist
 
 
 dao = PlaylistsDAO()
