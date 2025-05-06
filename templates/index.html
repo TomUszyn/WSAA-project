@@ -105,9 +105,124 @@
         </div>
     </div>
 
+    <!-- Playlist Update Form (Hidden initially) -->
+    <div id="updatePlaylistForm" style="display: none;" class="mt-4">
+        <h2>Update Playlist</h2>
+        <input type="hidden" name="id"/>
+        <div class="form-group">
+            <label>Playlist Name</label>
+            <input type="text" name="playlist_name" class="form-control" />
+            <small id="playlistNameError" class="text-danger"style="display: none;">Playlist name is required</small>
+        </div>
+        <div>
+            <button id="doUpdatePlaylistButton" onclick="doUpdatePlaylist()"class="btn btn-warning">Update Playlist</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
+
+    // Show Update Playlist Form
+    function showUpdatePlaylist(buttonElement) {
+        document.getElementById('updatePlaylistForm').style.display = "block";
+        document.getElementById('playlistTableDiv').style.display = "none";
+        document.getElementById('trackTable').style.display = "none"; 
+        document.getElementById('createUpdateForm').style.display = "none"; 
+        document.getElementById('topButtons').style.display = "none"; 
+    
+        var rowElement = buttonElement.parentNode.parentNode;
+        var playlist = getPlaylistFromRow(rowElement);
+        populatePlaylistFormWithData(playlist);
+    }
+    
+    // Extract playlist details from the row
+    function getPlaylistFromRow(row) {
+        return {
+            id: row.cells[0].innerText,
+            name: row.cells[1].innerText
+        };
+    }
+    
+    // Populate the form with playlist details
+    function populatePlaylistFormWithData(playlist) {
+        var form = document.getElementById('updatePlaylistForm');
+        form.querySelector('input[name="playlist_name"]').value = playlist.name;
+        form.querySelector('input[name="id"]').value = playlist.id;  // Optional if you want to keep the ID in the form
+    }
+    
+    // Update Playlist
+    function doUpdatePlaylist() {
+        var form = document.getElementById('updatePlaylistForm');
+        var playlistName = form.querySelector('input[name="playlist_name"]').value;
+        var playlistId = form.querySelector('input[name="id"]').value;
+
+        if (!playlistName) {
+            document.getElementById("playlistNameError").style.display = 'block';
+            return false;
+        }
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/playlists/' + playlistId,
+            data: JSON.stringify({ name: playlistName }),
+            contentType: "application/json",
+            success: function () {
+                // Hide the update form
+                document.getElementById('updatePlaylistForm').style.display = 'none';
+
+                // Show the playlist table again
+                document.getElementById('playlistTableDiv').style.display = 'block';
+
+                // Show the top buttons again
+                document.getElementById('topButtons').style.display = 'none';
+
+                // Refresh the playlist data
+                getAllPlaylists();
+            },
+            error: function (xhr) {
+                if (xhr.status === 409) {
+                    alert("A playlist with this name already exists.");
+                } else if (xhr.status === 400) {
+                    alert("Invalid input.");
+                } else {
+                    alert("Something went wrong.");
+                }
+            }
+        });
+    }   
+
+    // Create Playlist function (for reference)
+    function doCreatePlaylist() {
+        var form = document.getElementById('createPlaylistForm');
+        var playlistName = form.querySelector('input[name="playlist_name"]').value;
+    
+        if (!playlistName) {
+            document.getElementById("playlistNameError").style.display = 'block';
+            return false;
+        }
+    
+        $.ajax({
+            type: 'POST',
+            url: '/api/playlists',
+            data: JSON.stringify({ name: playlistName }),
+            contentType: "application/json",
+            success: function () {
+                form.querySelector('input[name="playlist_name"]').value = '';
+                location.reload();
+            },
+            error: function (xhr) {
+                if (xhr.status === 409) {
+                    alert("Playlist with this name already exists.");
+                } else if (xhr.status === 400) {
+                    alert("Invalid input.");
+                } else {
+                    alert("Something went wrong.");
+                }
+            }
+        });
+    }
+
 
     // Show Playlist Creation Form
     function showCreatePlaylist() {
@@ -128,20 +243,26 @@
         getAllPlaylists();
     }
 
-    function showCreate(){
-        document.getElementById('showCreateButton').style.display="none";
-        document.getElementById('trackTable').style.display="none";
-        document.getElementById('createUpdateForm').style.display="block";
+    function showCreate() {
+        // Hide all other sections
+        document.getElementById('trackTable').style.display = "none";
+        document.getElementById('playlistTableDiv').style.display = "none";
+        document.getElementById('createPlaylistForm').style.display = "none";
+        document.getElementById('updatePlaylistForm').style.display = "none";
+        
+        // Show track creation form and hide top buttons
+        document.getElementById('createUpdateForm').style.display = "block";
         document.getElementById('topButtons').style.display = "none";
-
-        document.getElementById('createLabel').style.display="inline";
-        document.getElementById('updateLabel').style.display="none";
-
-        document.getElementById('doCreateButton').style.display="block";
-        document.getElementById('doUpdateButton').style.display="none";
-
+        
+        // Set up the form for creation
+        document.getElementById('createLabel').style.display = "inline";
+        document.getElementById('updateLabel').style.display = "none";
+        
+        document.getElementById('doCreateButton').style.display = "block";
+        document.getElementById('doUpdateButton').style.display = "none";
+        
+        // Clear the form
         var form = document.getElementById('createUpdateForm');
-        form.querySelector('input[name="id"]').value = '';
         form.querySelector('input[name="title"]').value = '';
         form.querySelector('input[name="artist"]').value = '';
         form.querySelector('input[name="genre"]').value = '';
@@ -289,37 +410,26 @@
         });
     }
 
-        // Create a new playlist
-        function doCreatePlaylist() {
-            var form = document.getElementById('createPlaylistForm');
-            var playlistName = form.querySelector('input[name="playlist_name"]').value;
-
-            if (!playlistName) {
-                document.getElementById("playlistNameError").style.display = 'block';
-                return false;
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: '/api/playlists',
-                data: JSON.stringify({ name: playlistName }),
-                contentType: "application/json",
-                success: function () {
-                    // Clear the input field after success
-                    form.querySelector('input[name="playlist_name"]').value = '';
-                    location.reload();
-                },
-                error: function(xhr) {
-                    if (xhr.status === 409) {
-                        alert("Playlist with this name already exists.");
-                    } else if (xhr.status === 400) {
-                        alert("Invalid input.");
-                    } else {
-                        alert("Something went wrong.");
-                    }
+    function doDeletePlaylist(r) {
+        var row = r.parentNode.parentNode;
+        var id = row.cells[0].innerText;
+        
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/playlists/' + id,
+            success: function() {
+                // Remove the deleted row from the table
+                row.parentNode.removeChild(row);
+            },
+            error: function(xhr) {
+                if (xhr.status === 404) {
+                    alert('Playlist not found');
+                } else {
+                    alert('Error deleting playlist');
                 }
-            });
-        }
+            }
+        });
+    }
 
 
     // Fetches all tracks from the backend and populates the table
