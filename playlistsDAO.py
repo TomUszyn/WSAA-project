@@ -202,7 +202,7 @@ class PlaylistsDAO:
         self.close()
         return {"message": "Track deleted successfully."}
     
-    
+    # Convert a result line to a dictionary
     def convertToDictionary(self, resultLine):
         attkeys=['id','title','artist', 'genre', 'play_count', 'listeners', 'created_at']
         track = {}
@@ -212,7 +212,7 @@ class PlaylistsDAO:
             currentkey = currentkey + 1 
         return track
     
-        
+    # Create a new playlist   
     def createPlaylist(self, playlist):
         """Insert a new playlist into the playlists table."""
         cursor = self.getcursor()
@@ -239,12 +239,46 @@ class PlaylistsDAO:
         self.close()
         return playlists
     
+    # Convert a result line to a playlist dictionary
     def convertPlaylistToDictionary(self, resultLine):
         keys = ['id', 'name', 'created_at']
         playlist = {}
         for i in range(len(resultLine)):
             playlist[keys[i]] = resultLine[i]
         return playlist
+    
+    # Find a playlist by ID
+    def findPlaylistByID(self, id):
+        """Find a playlist by its ID."""
+        cursor = self.getcursor()
+        sql = "SELECT * FROM playlists WHERE id = %s"
+        cursor.execute(sql, (id,))
+        result = cursor.fetchone()
+        if result:
+            return self.convertPlaylistToDictionary(result)
+        else:
+            return None
+    
+    # Update the name of an existing playlist    
+    def updatePlaylistName(self, id, new_name):
+        """Update the name of an existing playlist."""
+        cursor = self.getcursor()
+        sql = "UPDATE playlists SET name = %s WHERE id = %s"
+        cursor.execute(sql, (new_name, id))
+        self.connection.commit()
+        self.close()
+        return {"message": "Playlist name updated successfully."}
+    
+    # Delete a playlist by ID
+    def deletePlaylistByID(self, id):
+        """Delete a playlist by its ID."""
+        cursor = self.getcursor()
+        sql = "DELETE FROM playlists WHERE id = %s"
+        cursor.execute(sql, (id,))
+        self.connection.commit()
+        self.close()
+        return {"message": "Playlist deleted successfully."}
+
 
 
 dao = PlaylistsDAO()
