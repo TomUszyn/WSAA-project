@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS tracks (
     play_count INT DEFAULT NULL,
     listeners INT DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-););
+);
 """
 # Execute the SQL statement
 mycursor.execute(sql)

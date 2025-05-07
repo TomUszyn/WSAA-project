@@ -123,6 +123,75 @@
 
 <script>
 
+        // Add to Playlist function
+        function addTrackToPlaylist(buttonElement) {
+        // Store original table state
+        var playlistTable = document.getElementById('playlistTable');
+        var originalHeader = playlistTable.getElementsByTagName('thead')[0].    innerHTML;
+        var originalBody = playlistTable.getElementsByTagName('tbody')[0].innerHTML;
+        
+        // Get track info
+        var rowElement = buttonElement.parentNode.parentNode;
+        var trackId = rowElement.cells[0].innerText;
+        
+        // Show playlist selection
+        document.getElementById('playlistTableDiv').style.display = "block";
+        document.getElementById('trackTable').style.display = "none";
+        document.getElementById('topButtons').style.display = "none";
+        
+        // Simplify playlist table temporarily
+        playlistTable.getElementsByTagName('thead')[0].innerHTML =  '<tr><th>Playlist</th><th>Action</th></tr>';
+        
+        // Load playlists with Add buttons
+        $.ajax({
+            type: 'GET',
+            url: '/api/playlists',
+            success: function(response) {
+                var tbody = playlistTable.getElementsByTagName('tbody')[0];
+                tbody.innerHTML = '';
+                
+                response.forEach(playlist => {
+                    var row = tbody.insertRow();
+                    row.insertCell(0).innerText = playlist.name;
+                    
+                    var addBtn = document.createElement('button');
+                    addBtn.className = 'btn btn-sm btn-success';
+                    addBtn.textContent = 'Add';
+                    addBtn.onclick = function() {
+                        $.ajax({
+                            type: 'POST',
+                            url: `/api/playlists/${playlist.id}/tracks`,
+                            data: JSON.stringify({ track_id: trackId }),
+                            contentType: "application/json",
+                            success: function() {
+                                // Restore original table completely
+                                playlistTable.getElementsByTagName('thead')[0]. innerHTML = originalHeader;
+                                playlistTable.getElementsByTagName('tbody')[0]. innerHTML = originalBody;
+                                
+                                // Return to track list
+                                showTrackTableAfterAddition();
+                            }
+                        });
+                    };
+                    row.insertCell(1).appendChild(addBtn);
+                });
+            }
+        });
+    }
+    
+    // Restore original track table view
+    function showTrackTableAfterAddition() {
+        document.getElementById('playlistTableDiv').style.display = "none";
+        document.getElementById('trackTable').style.display = "table";
+        document.getElementById('topButtons').style.display = "block";
+        
+        // Refresh track list
+        var trackTable = document.getElementById('trackTable').getElementsByTagName ('tbody')[0];
+        trackTable.innerHTML = '';
+        getAll();
+    }
+
+
     // Show Update Playlist Form
     function showUpdatePlaylist(buttonElement) {
         document.getElementById('updatePlaylistForm').style.display = "block";
