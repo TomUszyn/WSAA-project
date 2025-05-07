@@ -279,6 +279,42 @@ class PlaylistsDAO:
         self.close()
         return {"message": "Playlist deleted successfully."}
 
+    # Add a track to a playlist (allows duplicates)
+    def addTrackToPlaylist(self, playlist_id, track_id):
+        """Add a track to playlist (allows duplicates)"""
+        cursor = self.getcursor()
+        try:
+            # Verify track exists
+            cursor.execute("SELECT id FROM tracks WHERE id = %s", (track_id,))
+            if not cursor.fetchone():
+                raise ValueError("Track does not exist")
+            
+            # Add track (will allow duplicates)
+            sql = "INSERT INTO playlist_tracks (playlist_id, track_id) VALUES (%s,  %s)"
+            cursor.execute(sql, (playlist_id, track_id))
+            self.connection.commit()
+            
+            # Get the newly added relationship
+            cursor.execute("""
+                SELECT pt.id, t.title, t.artist, pt.added_at 
+                FROM playlist_tracks pt
+                JOIN tracks t ON pt.track_id = t.id
+                WHERE pt.id = %s
+            """, (cursor.lastrowid,))
+            result = cursor.fetchone()
+            
+            return {
+                "id": result[0],
+                "title": result[1],
+                "artist": result[2],
+                "added_at": result[3].isoformat() if result[3] else None
+            }
+        except Exception as e:
+            self.connection.rollback()
+            raise e
+        finally:
+            self.close()
+
 
 
 dao = PlaylistsDAO()

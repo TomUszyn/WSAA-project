@@ -124,6 +124,21 @@ def delete_playlist(playlist_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Add track to playlist
+@app.route('/api/playlists/<int:playlist_id>/tracks', methods=['POST'])
+def add_track_to_playlist(playlist_id):
+    try:
+        data = request.get_json()
+        if not data or 'track_id' not in data:
+            return jsonify({"error": "track_id is required"}), 400
+            
+        result = dao.addTrackToPlaylist(playlist_id, data['track_id'])
+        return jsonify(result), 201
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__' :
     app.run(debug= True)
