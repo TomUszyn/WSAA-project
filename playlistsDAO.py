@@ -315,64 +315,41 @@ class PlaylistsDAO:
         finally:
             self.close()
 
+    # Get all tracks for a specific playlist
+    def getPlaylistTracks(self, playlist_id):
+        """Get all tracks for a specific playlist"""
+        cursor = self.getcursor()
+        sql = """
+            SELECT t.id, t.title, t.artist 
+            FROM tracks t
+            JOIN playlist_tracks pt ON t.id = pt.track_id
+            WHERE pt.playlist_id = %s
+        """
+        cursor.execute(sql, (playlist_id,))
+        results = cursor.fetchall()
+        tracks = []
+        for result in results:
+            tracks.append({
+                'id': result[0],
+                'title': result[1],
+                'artist': result[2]
+            })
+        self.close()
+        return tracks
+
+    # Remove a track from a playlist
+    def removeTrackFromPlaylist(self, playlist_id, track_id):
+        """Remove a track from playlist"""
+        cursor = self.getcursor()
+        sql = "DELETE FROM playlist_tracks WHERE playlist_id = %s AND track_id = %s"
+        cursor.execute(sql, (playlist_id, track_id))
+        self.connection.commit()
+        self.close()
+        return {"message": "Track removed from playlist"}
+
 
 
 dao = PlaylistsDAO()
 
 if __name__ == "__main__":
-   
-   #### Test: Create Track ###
-   try:
-       new_track = {
-           "title": "dasdsad",
-           "artist": "xczxz",       
-       }
-       created_track = dao.createTrack(new_track)
-       print("Created:", created_track)
-   except ValueError as e:
-       print("Create Track Error:", e)
-
-
-
-   #### Test: Get All Tracks ####
-#    try:
-#        all_tracks = dao.getAll()
-#        print("All Tracks:", all_tracks)
-#    except Exception as e:
-#        print("Get All Error:", e)
-        
-   
-   
-   #### Test: Find by ID ####
-    
-#   track_id = 1
-#   track = dao.findByID(track_id)
-#   if track:
-#       print("Track found:", track)
-#   else:
-#       print(f"No track found with ID {track_id}.")
-    
-
-   #### Test: Update Track ####
-#   track_id = 3
-#   update_data = {
-#       "title": "Updated Title",
-#       "genre": "Pop Rock",
-#       "play_count": 1600000
-#   }
-#   
-#   try:
-#       updated_track = dao.update(track_id, update_data)
-#       print("Updated:", updated_track)
-#   except ValueError as e:
-#       print("Update Error:", e)
-
-
-
-   # === Test: Delete Track ===
-#    track_id = 31
-#    try:
-#        result = dao.delete(track_id)
-#        print("Delete Result:", result)
-#    except Exception as e:
-#        print("Delete Track Error:", e)
+    pass
