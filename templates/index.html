@@ -119,15 +119,119 @@
         </div>
     </div>
 
+    <!-- Playlist Tracks View (Hidden initially) -->
+    <div id="playlistTracksView" style="display: none;">
+        <h2 id="playlistNameHeader">Playlist Tracks</h2>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody id="playlistTracksBody"></tbody>
+        </table>
+        <div id="emptyPlaylistMessage" style="display: none;">
+            <p class="text-muted">Nothing in playlist</p>
+        </div>
+        <button onclick="showTrackTable()" class="btn btn-secondary mt-3">Back to Tracks</button>
+    </div>
+
 </div>
 
 <script>
 
-        // Add to Playlist function
-        function addTrackToPlaylist(buttonElement) {
+    // Function to show playlist tracks
+    function viewPlaylistTracks(buttonElement) {
+        var rowElement = buttonElement.parentNode.parentNode;
+        var playlistId = rowElement.cells[0].innerText;
+        var playlistName = rowElement.cells[1].innerText;
+
+        // Hide other elements
+        hideAllSections();
+        
+        // Show playlist tracks view with loading state
+        document.getElementById('playlistTracksView').style.display = "block";
+        document.getElementById('playlistNameHeader').textContent = playlistName;
+        
+        // Clear previous content and show loading state
+        const tbody = document.getElementById('playlistTracksBody');
+        const emptyMsg = document.getElementById('emptyPlaylistMessage');
+        tbody.innerHTML = '';
+        emptyMsg.style.display = "none";
+        
+        // Load tracks
+        fetch(`/api/playlists/${playlistId}/tracks`)
+            .then(response => response.json())
+            .then(tracks => {
+                tbody.innerHTML = ''; // Clear any loading state
+                
+                if (tracks.length === 0) {
+                    emptyMsg.style.display = "block";
+                } else {
+                    emptyMsg.style.display = "none";
+                    tracks.forEach(track => {
+                        const row = tbody.insertRow();
+                        row.insertCell(0).textContent = track.title;
+                        row.insertCell(1).textContent = track.artist;
+                        
+                        // Remove button - no confirmation
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'btn btn-sm btn-danger';
+                        removeBtn.textContent = 'Remove';
+                        removeBtn.onclick = () => removeTrack(playlistId, track.id, row);
+                        row.insertCell(2).appendChild(removeBtn);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading tracks:', error);
+                emptyMsg.style.display = "block";
+                emptyMsg.textContent = "Error loading tracks";
+            });
+    }
+
+    // Function to remove a track - no confirmation
+    function removeTrack(playlistId, trackId, row) {
+        fetch(`/api/playlists/${playlistId}/tracks/${trackId}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                row.remove();
+                const tbody = document.getElementById('playlistTracksBody');
+                if (tbody.rows.length === 0) {
+                    document.getElementById('emptyPlaylistMessage').style.display = "block";
+                    document.getElementById('emptyPlaylistMessage').textContent = "Nothing in playlist";
+                }
+            }
+        });
+    }
+
+    // Function to go back to tracks
+    function showTrackTable() {
+        document.getElementById('playlistTracksView').style.display = "none";
+        document.getElementById('trackTable').style.display = "table";
+        document.getElementById('topButtons').style.display = "block";
+    }
+
+    // Helper function to hide sections
+    function hideAllSections() {
+        document.getElementById('trackTable').style.display = "none";
+        document.getElementById('createUpdateForm').style.display = "none";
+        document.getElementById('createPlaylistForm').style.display = "none";
+        document.getElementById('updatePlaylistForm').style.display = "none";
+        document.getElementById('topButtons').style.display = "none";
+        document.getElementById('playlistTableDiv').style.display = "none";
+    }
+
+
+    // Add to Playlist function
+    function addTrackToPlaylist(buttonElement) {
         // Store original table state
         var playlistTable = document.getElementById('playlistTable');
-        var originalHeader = playlistTable.getElementsByTagName('thead')[0].    innerHTML;
+        var originalHeader = playlistTable.getElementsByTagName('thead')[0].innerHTML;
         var originalBody = playlistTable.getElementsByTagName('tbody')[0].innerHTML;
         
         // Get track info
