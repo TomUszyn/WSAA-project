@@ -7,7 +7,7 @@ This repository contains the project for the "Web Services and Application" modu
 - [About](#about)
 - [Project description](#project-description)
 - [Files and Structure](#files-and-structure)
-- [Running the code](#usage)
+- [Getting Started](#getting-started)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 - [Author](#author)
