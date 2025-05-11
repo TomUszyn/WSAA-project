@@ -15,7 +15,9 @@ This repository contains the project for the "Web Services and Application" modu
 ## About
 
 The Music Playlist Organiser will be developed to demonstrate the techniques and knowledge covered in the Web Services and Application module. It will showcase key concepts like CRUD operations, API integration, dynamic web interfaces using Flask and AJAX, and database management with MySQL. Additionally, the project will highlight practical skills in hosting applications (on PythonAnywhere) and using third-party APIs, like Last.fm, to enhance user experience and functionality.<br>
+
 👉 Live Demo: [View the project on PythonAnywhere](https://tomuszyn.eu.pythonanywhere.com/)<br>
+
 [🔝 Back to Top](#table-of-contents)
 
 ## Project Description 
@@ -99,7 +101,6 @@ Allows tracks to be added multiple times to the same or different playlists.
 ✅ Enhances flexibility for future extensions, such as play counts and user interactions.  
 ✅ Provides a structured and maintainable API for frontend integration.
 
-
 ---
 
 ### 🛠️ Tech Stack
@@ -125,7 +126,6 @@ Allows tracks to be added multiple times to the same or different playlists.
 The repository includes the following files and structure:
 
 - **`.gitignore`** – Specifies files and folders to be ignored by Git version control.
-- **`.env`** – Stores environment variables required for configuration.
 - **`envTemplate.txt`** – Template for the `.env` file, providing guidance on required values.
 - **`LICENSE`** – Legal terms and conditions for using the project.
 - **`README.md`** – Documentation file providing an overview of the repository.
@@ -133,7 +133,8 @@ The repository includes the following files and structure:
 - **`playlistDAO.py`** – Data Access Object for managing playlist interactions with the database.
 - **`createTables/`** – Contains scripts necessary for setting up the database tables.
 - **`img/`** – Directory storing images and assets used within the project.
-- **`templates/`** – Contains index.html file for the application.<br>
+- **`templates/`** – Contains index.html file for the application.
+
 [🔝 Back to Top](#table-of-contents)
 
 ## 🚀 Getting Started
@@ -265,13 +266,15 @@ Open a web browser and navigate to:
 
 ## 📜 License
 
-This repository is licensed under the MIT License - see the LICENSE file for more details.<br>
+This repository is licensed under the MIT License - see the LICENSE file for more details.
+
 [🔝 Back to Top](#table-of-contents)
 
 ## Acknowledgments
 
 The Music Playlist Organiser project has been developed to demonstrate the techniques and concepts covered in the Web Services and Application module. It highlights the implementation of CRUD operations, third-party API integration (such as the Last.fm API), dynamic web interfaces using Flask and AJAX, and database management with MySQL. The project also emphasises practical experience in hosting applications on PythonAnywhere.
-Special thanks are due to the lecturer for providing valuable guidance and resources throughout the module, enabling the application of theoretical knowledge to a real-world project. Furthermore, web resources like the Last.fm API documentation and online hosting services have played a crucial role in enhancing the development experience.<br>
+Special thanks are due to the lecturer for providing valuable guidance and resources throughout the module, enabling the application of theoretical knowledge to a real-world project. Furthermore, web resources like the Last.fm API documentation and online hosting services have played a crucial role in enhancing the development experience.
+
 [🔝 Back to Top](#table-of-contents)
 
 ## Author
@@ -285,5 +288,6 @@ I am a student at Atlantic Technical University in Ireland, currently pursuing a
 * **Scripting**: Experience with Bash scripting and YAML for automation and configuration.
 * **Web Services**: Practical experience in creating and managing web applications with CRUD operations, dynamic interfaces using **AJAX**, and third-party API integration (such as **Last.fm API**).
 
-I am enthusiastic and hardworking, passionate about analysing real-world and virtual datasets. I enjoy working on data-driven projects that provide insights and drive decisions.<br>
+I am enthusiastic and hardworking, passionate about analysing real-world and virtual datasets. I enjoy working on data-driven projects that provide insights and drive decisions.
+
 [🔝 Back to Top](#table-of-contents)
