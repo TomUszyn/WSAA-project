@@ -7,8 +7,6 @@ This repository contains the project for the "Web Services and Application" modu
 - [About](#about)
 - [Project description](#project-description)
 - [Files and Structure](#files-and-structure)
-- [Getting Started](#getting-started)
-- [Prerequisites](#prerequisites)
 - [Running the code](#usage)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
@@ -122,7 +120,7 @@ Allows tracks to be added multiple times to the same or different playlists.
 ---
 [🔝 Back to Top](#table-of-contents)
 
-## 📁 Files and Structure
+## Files and Structure
 
 The repository includes the following files and structure:
 
