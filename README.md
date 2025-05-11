@@ -137,7 +137,7 @@ The repository includes the following files and structure:
 
 [🔝 Back to Top](#table-of-contents)
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these steps to start using the Music Playlist Organiser API on your local machine.
 
@@ -264,7 +264,7 @@ Open a web browser and navigate to:
 
 [🔝 Back to Top](#table-of-contents)
 
-## 📜 License
+## License
 
 This repository is licensed under the MIT License - see the LICENSE file for more details.
 
