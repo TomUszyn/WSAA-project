@@ -129,6 +129,7 @@ The repository includes the following files and structure:
 - **`envTemplate.txt`** – Template for the `.env` file, providing guidance on required values.
 - **`LICENSE`** – Legal terms and conditions for using the project.
 - **`README.md`** – Documentation file providing an overview of the repository.
+- **`PROJECT_GUIDE.md`** - Includes detailed instructions, deployment steps, and acknowledgments of key inspirations behind the project.
 - **`restserver.py`** – Main server script handling API requests and responses.
 - **`playlistDAO.py`** – Data Access Object for managing playlist interactions with the database.
 - **`createTables/`** – Contains scripts necessary for setting up the database tables.
