@@ -137,7 +137,20 @@
         </div>
         <button onclick="showTrackTable()" class="btn btn-secondary mt-3">Back to Tracks</button>
     </div>
-
+    <!-- Add to Playlist Selection View -->
+    <div id="addToPlaylistView" style="display: none;">
+        <h3>Add Track To Playlist</h3>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Playlist Name</th>
+                    <th>Add</th>
+                </tr>
+            </thead>
+            <tbody id="playlistSelectionBody"></tbody>
+        </table>
+    </div>
+   
 </div>
 
 <script>
@@ -227,74 +240,92 @@
     }
 
 
-    // Add to Playlist function
-    function addTrackToPlaylist(buttonElement) {
-        // Store original table state
-        var playlistTable = document.getElementById('playlistTable');
-        var originalHeader = playlistTable.getElementsByTagName('thead')[0].innerHTML;
-        var originalBody = playlistTable.getElementsByTagName('tbody')[0].innerHTML;
-        
-        // Get track info
-        var rowElement = buttonElement.parentNode.parentNode;
-        var trackId = rowElement.cells[0].innerText;
-        
-        // Show playlist selection
-        document.getElementById('playlistTableDiv').style.display = "block";
-        document.getElementById('trackTable').style.display = "none";
-        document.getElementById('topButtons').style.display = "none";
-        
-        // Simplify playlist table temporarily
-        playlistTable.getElementsByTagName('thead')[0].innerHTML =  '<tr><th>Playlist</th><th>Action</th></tr>';
-        
-        // Load playlists with Add buttons
-        $.ajax({
-            type: 'GET',
-            url: '/api/playlists',
-            success: function(response) {
-                var tbody = playlistTable.getElementsByTagName('tbody')[0];
-                tbody.innerHTML = '';
-                
-                response.forEach(playlist => {
-                    var row = tbody.insertRow();
-                    row.insertCell(0).innerText = playlist.name;
-                    
-                    var addBtn = document.createElement('button');
-                    addBtn.className = 'btn btn-sm btn-success';
-                    addBtn.textContent = 'Add';
-                    addBtn.onclick = function() {
-                        $.ajax({
-                            type: 'POST',
-                            url: `/api/playlists/${playlist.id}/tracks`,
-                            data: JSON.stringify({ track_id: trackId }),
-                            contentType: "application/json",
-                            success: function() {
-                                // Restore original table completely
-                                playlistTable.getElementsByTagName('thead')[0]. innerHTML = originalHeader;
-                                playlistTable.getElementsByTagName('tbody')[0]. innerHTML = originalBody;
-                                
-                                // Return to track list
-                                showTrackTableAfterAddition();
-                            }
-                        });
-                    };
-                    row.insertCell(1).appendChild(addBtn);
-                });
-            }
-        });
-    }
-    
-    // Restore original track table view
-    function showTrackTableAfterAddition() {
-        document.getElementById('playlistTableDiv').style.display = "none";
-        document.getElementById('trackTable').style.display = "table";
-        document.getElementById('topButtons').style.display = "block";
-        
-        // Refresh track list
-        var trackTable = document.getElementById('trackTable').getElementsByTagName ('tbody')[0];
-        trackTable.innerHTML = '';
-        getAll();
-    }
+// Function to go back to tracks
+function showTrackTable() {
+    document.getElementById('playlistTracksView').style.display = "none";
+    document.getElementById('trackTable').style.display = "table";
+    document.getElementById('topButtons').style.display = "block";
+}
 
+// Helper function to hide sections
+function hideAllSections() {
+    document.getElementById('trackTable').style.display = "none";
+    document.getElementById('createUpdateForm').style.display = "none";
+    document.getElementById('createPlaylistForm').style.display = "none";
+    document.getElementById('updatePlaylistForm').style.display = "none";
+    document.getElementById('topButtons').style.display = "none";
+    document.getElementById('playlistTableDiv').style.display = "none";
+}
+
+// Main function to show playlist selection
+function addTrackToPlaylist(buttonElement) {
+    const trackId = getTrackId(buttonElement);
+    showPlaylistSelection();
+    loadPlaylists(trackId);
+}
+
+// Helper functions
+function getTrackId(buttonElement) {
+    return buttonElement.closest('tr').cells[0].textContent;
+}
+
+function showPlaylistSelection() {
+    hideAllSections();
+    document.getElementById('addToPlaylistView').style.display = 'block';
+}
+
+function loadPlaylists(trackId) {
+    $.ajax({
+        url: '/api/playlists',
+        method: 'GET',
+        dataType: 'json',
+        success: function(playlists) {
+            renderPlaylists(playlists, trackId);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error loading playlists:", error);
+        }
+    });
+}
+
+function renderPlaylists(playlists, trackId) {
+    const html = playlists.map(playlist => `
+        <tr>
+            <td>${playlist.name}</td>
+            <td>
+                <button class="btn btn-sm btn-success" 
+                        onclick="handleAddToPlaylist(${playlist.id}, ${trackId})">
+                    Add
+                </button>
+            </td>
+        </tr>
+    `).join('');
+    
+    document.getElementById('playlistSelectionBody').innerHTML = html;
+}
+
+// Handle the add action
+function handleAddToPlaylist(playlistId, trackId) {
+    $.ajax({
+        url: `/api/playlists/${playlistId}/tracks`,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ track_id: trackId }),
+        success: function() {
+            returnToTrackList();
+        },
+        error: function(xhr, status, error) {
+            console.error("Error adding track to playlist:", error);
+        }
+    });
+}
+
+function returnToTrackList() {
+    document.getElementById('addToPlaylistView').style.display = 'none';
+    document.getElementById('trackTable').style.display = 'table';
+    document.getElementById('topButtons').style.display = 'block';
+    getAll(); // Assuming this refreshes the track list
+}
 
     // Show Update Playlist Form
     function showUpdatePlaylist(buttonElement) {
