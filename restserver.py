@@ -7,9 +7,13 @@ app = Flask(__name__)
 dao = PlaylistsDAO()
 
 # The index route serves the main HTML page
+from flask import render_template, make_response
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    response = make_response(render_template('index.html'))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    return response
 
 # Get all tracks
 @app.route('/api/tracks', methods=['GET'])

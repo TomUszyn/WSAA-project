@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Playlist Organiser</title>
 
     <!-- jQuery for AJAX and DOM manipulation -->
@@ -65,39 +66,38 @@
         <h2><span id="createLabel">Create a</span> <span id="updateLabel">Update</span> Track</h2>
         <input type="hidden" name="id"/>
         <div class="form-group">
-            <label>Title</label>
-            <input type="text" name="title" class="form-control" />
+            <label for="trackTitle">Title</label>
+            <input type="text" id="trackTitle" name="title" class="form-control" title="Enter the track title" placeholder="Enter title" />
             <small id="titleError" class="text-danger" style="display: none;">Title is required</small>
         </div>
         <div class="form-group">
-            <label>Artist</label>
-            <input type="text" name="artist" class="form-control" />
+            <label for="trackArtist">Artist</label>
+            <input type="text" id="trackArtist" name="artist" class="form-control" title="Enter the Artist" placeholder="Enter artist" />
             <small id="artistError" class="text-danger" style="display: none;">Artist is required</small>
         </div>
         <div class="form-group">
-            <label>Genre</label>
-            <input type="text" name="genre" class="form-control" />
+            <label for="trackGenre">Genre</label>
+            <input type="text" id="trackGenre" name="genre" class="form-control" title="Enter genre" placeholder="Enter genre"/>
         </div>
         <div class="form-group">
-            <label>Play Count</label>
-            <input type="number" name="play_count" class="form-control" />
+            <label for="playCount">Play Count</label>
+            <input type="number" id="playCount" name="play_count" class="form-control" title="Enter play count" placeholder="Enter plsy count"/>
         </div>
         <div class="form-group">
-            <label>Listeners</label>
-            <input type="number" name="listeners" class="form-control" />
+            <label for="listeners">Listeners</label>
+            <input type="number" id="listeners" name="listeners" class="form-control" title="Enter listeners" placeholder="Enter listeners"/>
         </div>
-        <div>
-            <button id="doCreateButton" onclick="doCreate()" class="btn btn-success">Create</button>
-            <button id="doUpdateButton" onclick="doUpdate()" class="btn btn-warning">Update</button>
-        </div>
-    </div>
-
+       <div>
+           <button id="doCreateButton" onclick="doCreate()" class="btn btn-success">Create</button>
+           <button id="doUpdateButton" onclick="doUpdate()" class="btn btn-warning">Update</button>
+       </div>
+   </div>
     <!-- Playlist Creation Form (Hidden initially) -->
     <div id="createPlaylistForm" style="display: none;" class="mt-4">
         <h2>Create Playlist</h2>
         <div class="form-group">
-            <label>Playlist Name</label>
-            <input type="text" name="playlist_name" class="form-control" />
+            <label for="newPlaylistName">Playlist Name</label>
+            <input type="text" id="newPlaylistName" name="playlist_name" class="form-control" />
             <small id="playlistNameError" class="text-danger" style="display: none;">Playlist name is required</small>
         </div>
         <div>
@@ -110,9 +110,9 @@
         <h2>Update Playlist</h2>
         <input type="hidden" name="id"/>
         <div class="form-group">
-            <label>Playlist Name</label>
-            <input type="text" name="playlist_name" class="form-control" />
-            <small id="playlistNameError" class="text-danger"style="display: none;">Playlist name is required</small>
+            <label for="updatePlaylistName">Playlist Name</label>
+            <input type="text" id="updatePlaylistName" name="playlist_name" class="form-control" />
+            <small id="playlistNameError" class="text-danger" style="display: none;">Playlist name is required</small>
         </div>
         <div>
             <button id="doUpdatePlaylistButton" onclick="doUpdatePlaylist()"class="btn btn-warning">Update Playlist</button>
@@ -235,24 +235,6 @@
                 emptyMsg.textContent = "Error loading tracks";
             }
         });
-    }
-
-
-    // Function to go back to tracks
-    function showTrackTable() {
-        document.getElementById('playlistTracksView').style.display = "none";
-        document.getElementById('trackTable').style.display = "table";
-        document.getElementById('topButtons').style.display = "block";
-    }
-
-    // Helper function to hide sections
-    function hideAllSections() {
-        document.getElementById('trackTable').style.display = "none";
-        document.getElementById('createUpdateForm').style.display = "none";
-        document.getElementById('createPlaylistForm').style.display = "none";
-        document.getElementById('updatePlaylistForm').style.display = "none";
-        document.getElementById('topButtons').style.display = "none";
-        document.getElementById('playlistTableDiv').style.display = "none";
     }
 
 
