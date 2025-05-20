@@ -1,5 +1,6 @@
 import os
 import mysql.connector
+from mysql.connector.errors import IntegrityError
 from dotenv import load_dotenv
 import requests
 
@@ -263,12 +264,20 @@ class PlaylistsDAO:
     def updatePlaylistName(self, id, new_name):
         """Update the name of an existing playlist."""
         cursor = self.getcursor()
-        sql = "UPDATE playlists SET name = %s WHERE id = %s"
-        cursor.execute(sql, (new_name, id))
-        self.connection.commit()
-        self.close()
-        return {"message": "Playlist name updated successfully."}
-    
+        try:
+            sql = "UPDATE playlists SET name = %s WHERE id = %s"
+            cursor.execute(sql, (new_name, id))
+            self.connection.commit()
+            return {"message": "Playlist name updated successfully."}
+        except IntegrityError as e:
+            # Check if error is due to duplicate entry (unique constraint)
+            if e.errno == 1062:  # MySQL error code for duplicate entry
+                raise ValueError("A playlist with this name already exists.")
+            else:
+                raise
+        finally:
+            self.close()
+            
     # Delete a playlist by ID
     def deletePlaylistByID(self, id):
         """Delete a playlist by its ID."""
