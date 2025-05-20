@@ -13,6 +13,7 @@ from flask import render_template, make_response
 def index():
     response = make_response(render_template('index.html'))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Content-Type'] = 'text/html; charset=utf-8'
     return response
 
 # Get all tracks
