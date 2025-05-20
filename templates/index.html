@@ -558,6 +558,7 @@
             data: JSON.stringify(track),
             contentType: "application/json",
             success: function () {
+                alert("Track created successfully.");
                 location.reload();
             },
             error: function(xhr) {
@@ -589,6 +590,7 @@
             data: JSON.stringify(track),
             contentType: "application/json",
             success: function(){
+                alert("Track updated successfully.");
                 location.reload()
             },
             error: function(xhr) {
