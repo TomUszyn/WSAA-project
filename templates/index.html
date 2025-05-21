@@ -204,11 +204,16 @@
                         const form = document.createElement('form');
                         form.onsubmit = function(e) {
                             e.preventDefault();
+
+                            const confirmed = confirm(`Are you sure you want to remove "${track.title}" from this playlist?`);
+                            if (!confirmed) return;
+
                             $.ajax({
                                 url: `/api/playlists/${playlistId}/tracks/${track.id}`,
                                 method: 'DELETE',
                                 success: function() {
                                     row.remove();
+                                    alert('Track removed from playlist');
                                     if (tbody.rows.length === 0) {
                                         emptyMsg.style.display = "block";
                                         emptyMsg.textContent = "Nothing in playlist";
@@ -310,6 +315,7 @@
             contentType: 'application/json',
             data: JSON.stringify({ track_id: trackId }),
             success: function() {
+                alert("Track added to playlist successfully.");
                 returnToTrackList();
             },
             error: function(xhr, status, error) {
