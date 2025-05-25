@@ -32,7 +32,7 @@
               <button id="searchButton" class="btn btn-outline-primary" type="button" onclick="getAll()">Search</button>
             </div>
           </div>
-          <p id="noResultsMessage" class="text-danger" style="display: none;">No matching tracks found.</p>
+          <p id="noResultsMessage" style="color: #6c757d; font-size: 1 rem; margin-top: 20px; display: none;"> No matching tracks found.</p>
         </div>
         <table class="table table-bordered" id="trackTable">
             <thead class="thead-light">
@@ -676,45 +676,45 @@
     }
 
 
-function getAll(){
-    var search = document.getElementById('searchBox').value;
-    var url = '/api/tracks';
-    if (search) url += '?search=' + encodeURIComponent(search);
-
-    $.ajax({
-        type: 'GET',
-        url: url,
-        success: function(response){
-            var trackTable = document.getElementById('trackTable');
-            var trackTableBody = trackTable.getElementsByTagName('tbody')[0];
-            var noResultsMessage = document.getElementById('noResultsMessage');
-
-            trackTableBody.innerHTML = ''; // Clear previous results
-
-            if (response.length === 0) {
-                trackTable.style.display = 'none';
-                noResultsMessage.style.display = 'block';
-                return;
-            } else {
-                trackTable.style.display = 'table';
-                noResultsMessage.style.display = 'none';
+    function getAll(){
+        var search = document.getElementById('searchBox').value;
+        var url = '/api/tracks';
+        if (search) url += '?search=' + encodeURIComponent(search);
+    
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(response){
+                var trackTable = document.getElementById('trackTable');
+                var trackTableBody = trackTable.getElementsByTagName('tbody')[0];
+                var noResultsMessage = document.getElementById('noResultsMessage');
+            
+                trackTableBody.innerHTML = ''; // Clear previous results
+            
+                if (response.length === 0) {
+                    trackTable.style.display = 'none';
+                    noResultsMessage.style.display = 'block';
+                    return;
+                } else {
+                    trackTable.style.display = 'table';
+                    noResultsMessage.style.display = 'none';
+                }
+            
+                response.forEach(track => {
+                    var row = trackTableBody.insertRow();
+                    row.insertCell(0).innerText = track.id;
+                    row.insertCell(1).innerText = track.title;
+                    row.insertCell(2).innerText = track.artist;
+                    row.insertCell(3).innerText = track.genre;
+                    row.insertCell(4).innerText = track.play_count;
+                    row.insertCell(5).innerText = track.listeners;
+                    row.insertCell(6).innerHTML = "<button onclick='showUpdate(this)' class='btn btn-warning'>Update</button>";
+                    row.insertCell(7).innerHTML = "<button onclick='doDelete(this)' class='btn btn-danger'>Delete</button>";
+                    row.insertCell(8).innerHTML = "<button onclick='addTrackToPlaylist(this)' class='btn btn-info'>Add to Playlist</button>";
+                });
             }
-
-            response.forEach(track => {
-                var row = trackTableBody.insertRow();
-                row.insertCell(0).innerText = track.id;
-                row.insertCell(1).innerText = track.title;
-                row.insertCell(2).innerText = track.artist;
-                row.insertCell(3).innerText = track.genre;
-                row.insertCell(4).innerText = track.play_count;
-                row.insertCell(5).innerText = track.listeners;
-                row.insertCell(6).innerHTML = "<button onclick='showUpdate(this)' class='btn btn-warning'>Update</button>";
-                row.insertCell(7).innerHTML = "<button onclick='doDelete(this)' class='btn btn-danger'>Delete</button>";
-                row.insertCell(8).innerHTML = "<button onclick='addTrackToPlaylist(this)' class='btn btn-info'>Add to Playlist</button>";
-            });
-        }
-    });
-}
+        });
+    }
 
 
     // Fetches all playlists from the backend and populates the playlist table
