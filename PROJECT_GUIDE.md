@@ -2,8 +2,8 @@
 
 ---
 
-## Chapter 1: Using the Application  
- 
+# Chapter 1: Using the Application  
+
 ## Welcome  
 This guide will help you organise music tracks and playlists efficiently. Follow the steps below to get started.  
 
@@ -11,10 +11,11 @@ This guide will help you organise music tracks and playlists efficiently. Follow
 
 ## 1. Adding Tracks  
 **What is a track?**  
-A track represents a song (e.g., "Bohemian Rhapsody" by Queen).  
+A track represents a song (e.g., *"Bohemian Rhapsody" by Queen*).  
 
 ### Steps to Add a Track  
 1. Click the **blue "Create" button** at the top.  
+   - A **form section** appears below the buttons.  
 2. Fill in the required fields:  
    - **Title** (Song name)  
    - **Artist**  
@@ -23,84 +24,118 @@ A track represents a song (e.g., "Bohemian Rhapsody" by Queen).
    - Play Count  
    - Listeners  
 4. Click **Create**.  
-   - *Note*: For recognised songs, genre and play data may auto-fill using **Last.fm**.  
 
-**Validation Tips**  
-- If you see **"Title is required"** or **"Artist is required"**, complete those fields.  
-- For duplicates: **"This track already exists"** – adjust the title or genre.  
+**What Happens Next?**  
+- ✅ **Success**: A popup says *"Track created successfully."*  
+- ❌ **Errors**:  
+  - `"Title/Artist is required"` (red text below the form).  
+  - `"This track already exists"` (alert popup).  
 
 ---
 
 ## 2. Editing or Deleting Tracks  
 ### Editing a Track  
 1. Click the **yellow "Update" button** next to the track.  
-2. Modify the details.  
-3. Click **Update** to save changes.  
+   - The **edit form** appears below the buttons.  
+2. Modify details.  
+3. Click **Update**.  
+
+**What Happens Next?**  
+- ✅ **Success**: *"Track updated successfully."* (popup).  
+- ❌ **Error**: *"Update failed: a track with the same title and artist already exists."* (popup).  
 
 ### Deleting a Track  
 1. Click the **red "Delete" button** next to the track.  
-   - *Note*: This action is immediate and permanent.  
+   - 🔴 **Confirmation Popup**: *"Are you sure you want to delete this track?"*  
+2. Click **OK** to delete or **Cancel** to keep it.  
 
-**Important**: Each title-artist combination must be unique.  
+**What Happens Next?**  
+- ✅ **Success**: *"Track deleted successfully."* (popup).  
 
 ---
 
 ## 3. Creating Playlists  
 **What is a playlist?**  
-A playlist is a custom collection of tracks (e.g., "Workout Mix").  
+A custom collection of tracks (e.g., *"Workout Mix"*).  
 
 ### Steps to Create a Playlist  
 1. Click the **green "Create Playlist" button**.  
-2. Enter a unique name (e.g., "Summer 2023").  
+   - A **form section** appears below the buttons.  
+2. Enter a unique name.  
 3. Click **Create Playlist**.  
 
-**Validation Tips**  
-- Empty names trigger: **"Playlist name is required"**.  
-- Duplicate names show: **"Name already exists"**.  
+**What Happens Next?**  
+- ✅ **Success**: *"Playlist created successfully."* (popup).  
+- ❌ **Errors**:  
+  - `"Playlist name is required"` (red text below the form).  
+  - *"Playlist with this name already exists."* (popup).  
 
 ---
 
 ## 4. Adding Tracks to Playlists  
-1. Locate the track in the list.  
-2. Click the **light blue "Add to Playlist" button**.  
-3. Select a playlist from the list.  
-4. Click **Add** to confirm.  
+1. Click the **light blue "Add to Playlist" button** next to a track.  
+   - A **list of playlists** appears.  
+2. Click **Add** next to your chosen playlist.  
+
+**What Happens Next?**  
+- ✅ **Success**: *"Track added to playlist successfully."* (popup).  
 
 ---
 
-## 5. Managing Playlists  
+## 5. Managing Playlists
 ### Accessing Playlists  
-1. Click the **light blue "Show Playlists" button**.  
+1. Click the **light blue "Show Playlists" button** at the top.  
+   - This displays your existing playlists in a table.  
 
-### Playlist Actions  
-- **Rename**: Click the **yellow "Update" button**.  
-- **Delete**: Click the **red "Delete" button** (no confirmation).  
+### Playlist Actions (After Accessing) 
+- **Rename**:  
+  1. Click the **yellow "Update" button** → inline form appears.  
+  2. Edit the name → Click **Update Playlist**.  
+  - ✅ **Success**: *"Playlist updated successfully."*  
+
+- **Delete**:  
+  1. Click the **red "Delete" button** → 🔴 **Popup**:  
+     *"Are you sure you want to delete this playlist?"*  
+  2. Click **OK** to delete.  
+  - ✅ **Success**: *"Playlist deleted successfully."*  
+
 - **View Tracks**: Click the **light blue "View Tracks" button**.  
 
 ---
 
 ## 6. Managing Playlist Contents  
-### Viewing/Removing Tracks  
-1. Click **View Tracks** next to a playlist.  
-2. To remove a track:  
-   - Click the **red "Remove" button** (instant action).  
-3. Empty playlists display: **"Nothing in playlist"**.  
-4. Return to the main list with **Back to Tracks**.  
+### Removing Tracks  
+1. In playlist view, click the **red "Remove" button**.  
+   - 🔴 **Confirmation**: *"Are you sure you want to remove this track?"*  
+2. Click **OK** to confirm.  
+
+**What Happens Next?**  
+- ✅ **Success**: *"Track removed from playlist"* (popup).  
 
 ---
 
-## Last.fm Integration  
-- **Automated Data**: Recognised tracks auto-fill genre, play count, and listeners via **Last.fm**.  
-- **Manual Input Priority**: Your entries override auto-filled data.  
-- **Limitations**: Some genres may not auto-fill.  
+## 7. Search Feature  
+**Find tracks instantly**  
+1. Use the **search bar** above the track list.  
+2. Type any part of:  
+   - Title  
+   - Artist  
+   - Genre  
+3. Results update when you:  
+   - Press **Enter**  or click the **Search button**  
 
 ---
 
 ## Troubleshooting  
-- **Refresh the page** or click **Back to Tracks** to reset the view.  
-- Use **Update** to correct typos or details.  
-- Delete incorrect entries and recreate them.  
+- **Unexpected popups?**  
+  - `"Invalid input."`: Check for typos in forms.  
+  - `"Something went wrong."`: Refresh the page.  
+- **Search issues?** Clear the search box and press Enter.  
 
+---
+
+**Enjoy your music library!** 🎵  
+*Clear popups guide you through every action, and confirmations prevent accidental deletions.*  
 ---
 
 ## Chapter 2: Deploying the Application  
