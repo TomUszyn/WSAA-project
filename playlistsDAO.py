@@ -45,18 +45,24 @@ class PlaylistsDAO:
             self.connection.close()
             self.connection = None
             
-    # Get all tracks        
-    def getAll(self):
+    # Get all or filtered tracks by one search term
+    def getAll(self, search=None):
         cursor = self.getcursor()
-        sql="select * from tracks"
-        cursor.execute(sql)
+        sql = "SELECT * FROM tracks"
+        values = []
+
+        if search:
+            sql += " WHERE title LIKE %s OR artist LIKE %s OR genre LIKE %s"
+            search_term = f"%{search}%"
+            values.extend([search_term, search_term, search_term])
+
+        cursor.execute(sql, values)
         results = cursor.fetchall()
         returnArray = []
-        #print(results)
+
         for result in results:
-            #print(result)
             returnArray.append(self.convertToDictionary(result))
-        
+
         self.close()
         return returnArray
     

@@ -16,11 +16,12 @@ def index():
     response.headers['Content-Type'] = 'text/html; charset=utf-8'
     return response
 
-# Get all tracks
+# Get all or filtered tracks
 @app.route('/api/tracks', methods=['GET'])
 def get_all_tracks():
     try:
-        tracks = dao.getAll()
+        search = request.args.get('search')
+        tracks = dao.getAll(search)
         return jsonify(tracks)
     except Exception as e:
         return jsonify({"error": str(e)}), 500

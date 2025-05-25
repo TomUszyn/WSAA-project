@@ -24,6 +24,16 @@
 
     <!-- Table displaying all tracks -->
     <div>
+        <!-- Search Box and Button (inline) -->
+        <div id="searchContainer" class="mb-3" style="display: block; max-width: 400px;">
+          <div class="input-group">
+            <input type="text" id="searchBox" class="form-control" placeholder="Search Title, Artist, or Genre" onkeypress="handleSearchKey(event)">
+            <div class="input-group-append">
+              <button id="searchButton" class="btn btn-outline-primary" type="button" onclick="getAll()">Search</button>
+            </div>
+          </div>
+          <p id="noResultsMessage" class="text-danger" style="display: none;">No matching tracks found.</p>
+        </div>
         <table class="table table-bordered" id="trackTable">
             <thead class="thead-light">
                 <tr>
@@ -119,24 +129,6 @@
         </div>
     </div>
 
-    <!-- Playlist Tracks View (Hidden initially) -->
-    <div id="playlistTracksView" style="display: none;">
-        <h2 id="playlistNameHeader">Playlist Tracks</h2>
-        <table class="table table-bordered">
-            <thead class="thead-light">
-                <tr>
-                    <th>Title</th>
-                    <th>Artist</th>
-                    <th>Remove</th>
-                </tr>
-            </thead>
-            <tbody id="playlistTracksBody"></tbody>
-        </table>
-        <div id="emptyPlaylistMessage" style="display: none;">
-            <p class="text-muted">Nothing in playlist</p>
-        </div>
-        <button onclick="showTrackTable()" class="btn btn-secondary mt-3">Back to Tracks</button>
-    </div>
     <!-- Add to Playlist Selection View -->
     <div id="addToPlaylistView" style="display: none;">
         <h3>Add Track To Playlist</h3>
@@ -170,6 +162,13 @@
 </div>
 
 <script>
+
+    function handleSearchKey(event) {
+        if (event.key === 'Enter') {
+            getAll();
+        }
+    }
+
 
     function viewPlaylistTracks(buttonElement) {
         const rowElement = buttonElement.parentNode.parentNode;
@@ -248,6 +247,7 @@
         document.getElementById('playlistTracksView').style.display = "none";
         document.getElementById('trackTable').style.display = "table";
         document.getElementById('topButtons').style.display = "block";
+        document.getElementById('searchBox').style.display = "inline-block";
     }
 
     // Helper function to hide sections
@@ -258,6 +258,8 @@
         document.getElementById('updatePlaylistForm').style.display = "none";
         document.getElementById('topButtons').style.display = "none";
         document.getElementById('playlistTableDiv').style.display = "none";
+        document.getElementById('searchBox').style.display = "none";
+        document.getElementById('searchButton').style.display = 'none'
     }
 
     // Main function to show playlist selection
@@ -328,6 +330,12 @@
         document.getElementById('addToPlaylistView').style.display = 'none';
         document.getElementById('trackTable').style.display = 'table';
         document.getElementById('topButtons').style.display = 'block';
+        document.getElementById('searchBox').style.display = "block";
+        document.getElementById('searchButton').style.display = 'block'
+
+        // Clear search input
+        document.getElementById('searchBox').value = '';
+
         getAll(); // Assuming this refreshes the track list
     }
 
@@ -441,6 +449,8 @@
         document.getElementById('trackTable').style.display = "none"; // Hide the track table
         document.getElementById('createUpdateForm').style.display = "none"; // Hide the track create/update form
         document.getElementById('topButtons').style.display = "none"; // Hide the top buttons
+        document.getElementById('searchBox').style.display = "none";
+        document.getElementById('searchButton').style.display = 'none'
     }
 
     // Show Playlists Table
@@ -450,6 +460,8 @@
         document.getElementById('trackTable').style.display = "none"; 
         document.getElementById('createUpdateForm').style.display = "none";
         document.getElementById('topButtons').style.display = "none";
+        document.getElementById('searchBox').style.display = "none";
+        document.getElementById('searchButton').style.display = 'none'
         getAllPlaylists();
     }
 
@@ -459,6 +471,8 @@
         document.getElementById('playlistTableDiv').style.display = "none";
         document.getElementById('createPlaylistForm').style.display = "none";
         document.getElementById('updatePlaylistForm').style.display = "none";
+        document.getElementById('searchBox').style.display = "none";
+        document.getElementById('searchButton').style.display = 'none'
         
         // Show track creation form and hide top buttons
         document.getElementById('createUpdateForm').style.display = "block";
@@ -492,6 +506,8 @@
         document.getElementById('trackTable').style.display="none"
         document.getElementById('createUpdateForm').style.display="block"
         document.getElementById('topButtons').style.display = "none"
+        document.getElementById('searchBox').style.display = "none";
+        document.getElementById('searchButton').style.display = 'none'
 
         document.getElementById('createLabel').style.display="none"
         document.getElementById('updateLabel').style.display="inline"
@@ -660,28 +676,46 @@
     }
 
 
-    // Fetches all tracks from the backend and populates the table
-    function getAll(){
-        $.ajax({
-            type: 'GET',
-            url: '/api/tracks',
-            success: function(response){
-                var trackTable = document.getElementById('trackTable').getElementsByTagName('tbody')[0];
-                response.forEach(track => {
-                    var row = trackTable.insertRow();
-                    row.insertCell(0).innerText = track.id;
-                    row.insertCell(1).innerText = track.title;
-                    row.insertCell(2).innerText = track.artist;
-                    row.insertCell(3).innerText = track.genre;
-                    row.insertCell(4).innerText = track.play_count;
-                    row.insertCell(5).innerText = track.listeners;
-                    row.insertCell(6).innerHTML = "<button onclick='showUpdate(this)' class='btn btn-warning'>Update</button>";
-                    row.insertCell(7).innerHTML = "<button onclick='doDelete(this)' class='btn btn-danger'>Delete</button>";
-                    row.insertCell(8).innerHTML = "<button onclick='addTrackToPlaylist(this)' class='btn btn-info'>Add to Playlist</button>";
-                });
+function getAll(){
+    var search = document.getElementById('searchBox').value;
+    var url = '/api/tracks';
+    if (search) url += '?search=' + encodeURIComponent(search);
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function(response){
+            var trackTable = document.getElementById('trackTable');
+            var trackTableBody = trackTable.getElementsByTagName('tbody')[0];
+            var noResultsMessage = document.getElementById('noResultsMessage');
+
+            trackTableBody.innerHTML = ''; // Clear previous results
+
+            if (response.length === 0) {
+                trackTable.style.display = 'none';
+                noResultsMessage.style.display = 'block';
+                return;
+            } else {
+                trackTable.style.display = 'table';
+                noResultsMessage.style.display = 'none';
             }
-        });
-    }
+
+            response.forEach(track => {
+                var row = trackTableBody.insertRow();
+                row.insertCell(0).innerText = track.id;
+                row.insertCell(1).innerText = track.title;
+                row.insertCell(2).innerText = track.artist;
+                row.insertCell(3).innerText = track.genre;
+                row.insertCell(4).innerText = track.play_count;
+                row.insertCell(5).innerText = track.listeners;
+                row.insertCell(6).innerHTML = "<button onclick='showUpdate(this)' class='btn btn-warning'>Update</button>";
+                row.insertCell(7).innerHTML = "<button onclick='doDelete(this)' class='btn btn-danger'>Delete</button>";
+                row.insertCell(8).innerHTML = "<button onclick='addTrackToPlaylist(this)' class='btn btn-info'>Add to Playlist</button>";
+            });
+        }
+    });
+}
+
 
     // Fetches all playlists from the backend and populates the playlist table
     function getAllPlaylists() {
