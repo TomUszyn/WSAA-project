@@ -248,6 +248,7 @@
         document.getElementById('trackTable').style.display = "table";
         document.getElementById('topButtons').style.display = "block";
         document.getElementById('searchBox').style.display = "inline-block";
+        document.getElementById('searchButton').style.display = 'inline-block';
     }
 
     // Helper function to hide sections
@@ -260,6 +261,7 @@
         document.getElementById('playlistTableDiv').style.display = "none";
         document.getElementById('searchBox').style.display = "none";
         document.getElementById('searchButton').style.display = 'none'
+        document.getElementById("noResultsMessage").style.display = "none";
     }
 
     // Main function to show playlist selection
@@ -345,7 +347,8 @@
         document.getElementById('playlistTableDiv').style.display = "none";
         document.getElementById('trackTable').style.display = "none"; 
         document.getElementById('createUpdateForm').style.display = "none"; 
-        document.getElementById('topButtons').style.display = "none"; 
+        document.getElementById('topButtons').style.display = "none";
+        document.getElementById("noResultsMessage").style.display = "none" 
     
         var rowElement = buttonElement.parentNode.parentNode;
         var playlist = getPlaylistFromRow(rowElement);
@@ -450,7 +453,8 @@
         document.getElementById('createUpdateForm').style.display = "none"; // Hide the track create/update form
         document.getElementById('topButtons').style.display = "none"; // Hide the top buttons
         document.getElementById('searchBox').style.display = "none";
-        document.getElementById('searchButton').style.display = 'none'
+        document.getElementById('searchButton').style.display = 'none';
+        document.getElementById("noResultsMessage").style.display = "none";
     }
 
     // Show Playlists Table
@@ -461,7 +465,8 @@
         document.getElementById('createUpdateForm').style.display = "none";
         document.getElementById('topButtons').style.display = "none";
         document.getElementById('searchBox').style.display = "none";
-        document.getElementById('searchButton').style.display = 'none'
+        document.getElementById('searchButton').style.display = 'none';
+        document.getElementById("noResultsMessage").style.display = "none";
         getAllPlaylists();
     }
 
@@ -473,6 +478,7 @@
         document.getElementById('updatePlaylistForm').style.display = "none";
         document.getElementById('searchBox').style.display = "none";
         document.getElementById('searchButton').style.display = 'none'
+        document.getElementById("noResultsMessage").style.display = "none"
         
         // Show track creation form and hide top buttons
         document.getElementById('createUpdateForm').style.display = "block";
@@ -680,7 +686,7 @@
         var search = document.getElementById('searchBox').value;
         var url = '/api/tracks';
         if (search) url += '?search=' + encodeURIComponent(search);
-    
+
         $.ajax({
             type: 'GET',
             url: url,
@@ -688,9 +694,9 @@
                 var trackTable = document.getElementById('trackTable');
                 var trackTableBody = trackTable.getElementsByTagName('tbody')[0];
                 var noResultsMessage = document.getElementById('noResultsMessage');
-            
+
                 trackTableBody.innerHTML = ''; // Clear previous results
-            
+
                 if (response.length === 0) {
                     trackTable.style.display = 'none';
                     noResultsMessage.style.display = 'block';
@@ -699,7 +705,7 @@
                     trackTable.style.display = 'table';
                     noResultsMessage.style.display = 'none';
                 }
-            
+
                 response.forEach(track => {
                     var row = trackTableBody.insertRow();
                     row.insertCell(0).innerText = track.id;
