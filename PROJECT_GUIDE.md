@@ -258,9 +258,71 @@ This project was fundamentally inspired by the **BookViewer API**, a minimalist 
   - **[Last.fm API](https://www.last.fm/api)**: Integrated for music metadata retrieval.
   - **[Bootstrap](https://getbootstrap.com/)**: Used for responsive web UI components. 
 
-### 3 . Referneces
-  - **[dotenv](https://www.geeksforgeeks.org/using-python-environment-variables-with-python-dotenv/)**: Using for load environment variables from a .env file.
-  - **[virtualenvs](docs.python-guide.org/dev/virtualenvs/https://docs.python-guide.org/dev/virtualenvs/)**: Set up Virtual environment.
-  - **[HTML](https://www.w3schools.com/html/)**: Useful to understand basics of HTML.
-  - **[JavaScriot](https://www.w3schools.com/js/default.asp)**: Basics of JavaScript.
+### 3. Future Plans to Improve the API
+
+- **Add statistics and analytics:** Provide insights such as the most popular tracks, playlists with the highest number of additions, and user activity summaries to enhance user experience and inform development.
+- **Add search functionality in the playlists section:** Enable users to quickly find playlists by name or other criteria, improving navigation and usability.
+- **Explore alternative implementations for adding tracks:** Consider different UI/UX approaches to streamline how users add tracks to playlists beyond the current method.
+- **Enhance layout and design:** Improve the visual design for a cleaner, more modern, and accessible interface.
+- **Standardised Data Format (Automated behind the scenes):** Implement automated data cleaning and formatting (e.g., consistent capitalization, trimming whitespace) to maintain clean, uniform database entries and prevent duplicates, all handled transparently without user intervention.
+
+### 4. References
+
+
+- **[dotenv](https://www.geeksforgeeks.org/using-python-environment-variables-with-python-dotenv/)**: Used to load environment variables from a `.env` file.  
+- **[virtualenvs](https://docs.python-guide.org/dev/virtualenvs/)**: Used to set up a virtual environment.  
+- **[HTML](https://www.w3schools.com/html/)**: Useful for understanding the basics of HTML.  
+- **[JavaScript](https://www.w3schools.com/js/default.asp)**: Covers the basics of JavaScript.  
+- **[ChatGPT](https://chatgpt.com/)** and **[DeepSeek](https://chat.deepseek.com/)**: Used to generate ideas and resolve problems throughout development. AI tools were instrumental in assisting with design strategies, debugging support, and accelerating feature creation.
+
+These are just **sample prompts** that illustrate the approach taken to guide the implementation of various features using AI tools like ChatGPT and DeepSeek. They demonstrate the **technique of crafting prompts** for solving specific technical challenges.
+
+---
+
+#### Sample Prompt to realise View Tracks:
+
+I'm building a music playlist web app using Flask and JavaScript. I want to create a feature where users can click a "View Tracks" button next to a playlist, and it should display all the tracks in that playlist using AJAX.
+
+When the button is clicked:
+
+- "Hide all other sections."
+- "Show a new section with the playlist's name and a list of tracks (title and artist)."
+- "If there are no tracks, display 'Nothing in playlist'."
+- "Each track should have a 'Remove' button that deletes the track from the playlist via AJAX and removes it from the DOM."
+- "If all tracks are removed, show the 'Nothing in playlist' message again."
+
+Also include a function to go back to the main track table and restore search and button visibility. Can you help write the JavaScript?
+
+---
+
+#### Sample Prompt to realise Add Track
+
+##### 1. Main Prompt for Add-to-Playlist Feature (AJAX & UI)
+
+I'm creating a music web app using Flask and JavaScript. I want to allow users to add a track to a playlist. When a user clicks "Add to Playlist" on a track:
+
+- It should hide the current table and show a new section with a list of existing playlists.
+- Each playlist should have an "Add" button.
+- When the user clicks "Add", it should send a POST request via AJAX to add the track to that playlist.
+- After success, it should show a success message and return to the main track list.
+
+Can you write the JavaScript functions to achieve this, including any helper functions like getting the track ID, rendering playlists, and switching views?
+
+##### 2. Prompt for Just the Playlist Loader + Renderer
+
+I need to dynamically load playlists via AJAX and render them into a table body using JavaScript. Each playlist row should include the playlist name and an "Add" button. When clicked, that button should call a function to add a track (track ID passed in) to the playlist.
+
+Can you write a `loadPlaylists(trackId)` function that fetches the playlists and a `renderPlaylists(playlists, trackId)` function that generates the HTML?
+
+##### 3. Prompt for Return to Track Table
+
+After a track is added to a playlist, I want to go back to the main track list view.
+
+Can you write a `returnToTrackList()` JavaScript function that:
+
+- "Hides the 'Add to Playlist' view"
+- "Shows the track table, search box, and top buttons"
+- "Clears the search input"
+- "Refreshes the track list by calling `getAll()`?"
+---
 
